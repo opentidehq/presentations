@@ -346,8 +346,7 @@ const TitleLT: Page = () => (
     </p>
 
     <p style={{ fontSize: 34, lineHeight: 1.5, color: c.muted, margin: '30px 0 0', maxWidth: 1420 }}>
-      Developed at the <strong style={{ color: c.soft, fontWeight: 650 }}>CSOC of the European
-      Commission</strong> — and open sourced since 2024 under the{' '}
+      Developed at the <strong style={{ color: c.soft, fontWeight: 650 }}>CSOC of the European<br />{''}</strong>and open sourced since 2024 under the{' '}
       <span style={{ fontFamily: mono, fontSize: 30, color: 'var(--osd-accent)' }}>
         EUPL v1.2
       </span>{' '}
@@ -374,7 +373,7 @@ const TitleLT: Page = () => (
       <img
         src={unitedWeCyberdefend}
         alt="United we cyberdefend"
-        style={{ height: 104, width: 'auto', display: 'block' }}
+        style={{ height: '156.74px', width: '147.58px', display: 'block', minWidth: '0px', minHeight: '0px', maxWidth: 'none', maxHeight: 'none', flexShrink: '0', flexGrow: '0', flexBasis: 'auto', translate: '1139.97px -696.83px', objectFit: 'cover' }}
       />
       <div style={{ marginLeft: 'auto', fontFamily: mono, fontSize: 24, color: c.dim, textAlign: 'right', lineHeight: 1.6 }}>
         opentide.org
