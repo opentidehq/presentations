@@ -13,6 +13,7 @@ import { type CSSProperties, type ReactNode, useEffect, useRef } from 'react';
 import InterUrl from '@assets/fonts/Inter-Variable-latin.woff2';
 import MonoUrl from '@assets/fonts/JetBrainsMono-Variable-latin.woff2';
 import logoNormal from '@assets/brand/logo-normal.svg';
+import mdrLifecycle from './assets/MDR_lifecycle.svg';
 import qrOpentide from './assets/qr-opentide-org.svg';
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -2157,6 +2158,23 @@ skipped   web shell spawn: no web telemetry yet
 gates     opentide validate --strict     exit 0
           deploy --platform sentinel --dry-run   ok`;
 
+// Moved here from the hack.lu lightning deck: the status progression a rule
+// walks, and where the hand-over gate sits.
+const MdrLifecycle: Page = () => (
+  <Frame chapter={['04', 'ship it']} source="EC CSOC · managed detection rule lifecycle">
+    <img
+      src={mdrLifecycle}
+      alt="Managed detection rule lifecycle: a signal leaves the backlog into DESIGN, DEVELOPMENT and STAGING on the detection-as-code pipeline, passes the ACCEPTANCE hand-over gate into PRODUCTION, loops back through IMPROVING when it needs rework, and is explicitly DISABLED then REMOVED on retirement."
+      style={{ width: '100%', flex: 1, minHeight: 0, objectFit: 'contain', display: 'block' }}
+    />
+    <Note tag="gate" style={{ marginTop: 18 }}>
+      Backlog to <M>PRODUCTION</M>. ACCEPTANCE is the hand-over gate: the alert handling manager
+      reviews the rule before it goes live, and <M>IMPROVING</M> is the loop back when it needs
+      rework. No rule leaves the lifecycle silently.
+    </Note>
+  </Frame>
+);
+
 const PromptPR: Page = () => (
   <Frame chapter={['04', 'ship it']} source="opentide.org/docs/usage/workflows/detection-as-code">
     <H>One chain, one pull request.</H>
@@ -2579,6 +2597,8 @@ Through MCP the agent previews one rule at a time with dry_run true.
 Tenants and credentials are yours to add, as GitHub secrets, never in the repo or the chat. With the sentinel extra and credentials, validate query --live checks the catalogue queries against your workspace.`,
   // Divider 04
   `Chapter four: ship it. The agent's output is a pull request. CI runs every gate again, and humans promote.`,
+  `Before the pull request, the shape of the whole journey. Trace it with your hand: a signal leaves the backlog, gets a DESIGN, becomes a rule in DEVELOPMENT, then runs in STAGING against real data. Stop at ACCEPTANCE and make the point of the slide — this is a hand-over gate, not a build step. The alert handling manager decides whether the rule is something their team can actually work at three in the morning: fidelity, severity, the response block. Ready means PRODUCTION; needs rework sends it back through IMPROVING. Then retirement, which is explicit: DISABLED, then REMOVED. No rule leaves silently.
+The colours are who owns the merge request, and that part is organisation-specific — this is how the European Commission CSOC splits it between CATCH and CSIRC. Tell the room to swap the team names for their own; the shape holds. Tie it to deployment.toml: every box here is a status, and each status already maps to a deploy strategy.`,
   // PR
   `Prompt 09: one chain, one pull request. Ask for a description a reviewer can act on: the intel, the chain with UUIDs, the signals you chose not to build, and the gate output.
 The pre-commit hook validates the commit itself, so a broken object never reaches the branch.`,
@@ -2632,6 +2652,7 @@ export default [
   DryRun,
   // 04 · ship it
   DividerShip,
+  MdrLifecycle,
   PromptPR,
   CI,
   Guardrails,
