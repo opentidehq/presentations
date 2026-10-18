@@ -1,6 +1,5 @@
 import {
   type DesignSystem,
-  ImagePlaceholder,
   type Page,
   type SlideMeta,
   type SlideTransition,
@@ -148,44 +147,6 @@ const Shell = ({
   </div>
 );
 
-const Code = ({
-  children,
-  size = 26,
-  label,
-}: {
-  children: string;
-  size?: number;
-  label?: string;
-}) => (
-  <div
-    style={{
-      border: `1px solid ${c.rule}`,
-      borderRadius: 'var(--osd-radius)',
-      background: c.panel,
-      overflow: 'hidden',
-    }}
-  >
-    {label ? (
-      <div
-        style={{
-          padding: '14px 26px',
-          borderBottom: `1px solid ${c.rule}`,
-          fontFamily: mono,
-          fontSize: 22,
-          lineHeight: 1.2,
-          color: c.muted,
-        }}
-      >
-        {label}
-      </div>
-    ) : null}
-    <pre
-      style={{ margin: 0, padding: 24, fontFamily: mono, fontSize: size, lineHeight: 1.45, color: c.soft, whiteSpace: 'pre', translate: '-0.99px 0px' }}
-    >
-      {children}
-    </pre>
-  </div>
-);
 
 const Lede = ({ children }: { children: ReactNode }) => (
   <p
@@ -217,241 +178,13 @@ const Note = ({ children }: { children: ReactNode }) => (
   </p>
 );
 
-const Card = ({
-  kicker,
-  title,
-  body,
-}: {
-  kicker: string;
-  title: string;
-  body: string;
-}) => (
-  <div
-    style={{
-      flex: 1,
-      border: `1px solid ${c.rule}`,
-      borderRadius: 'var(--osd-radius)',
-      background: c.panel,
-      padding: 36,
-    }}
-  >
-    <div
-      style={{
-        fontFamily: mono,
-        fontSize: 22,
-        lineHeight: 1.2,
-        color: 'var(--osd-accent)',
-        letterSpacing: '0.1em',
-      }}
-    >
-      {kicker}
-    </div>
-    <div style={{ fontSize: 40, lineHeight: 1.2, fontWeight: 700, margin: '18px 0 14px' }}>
-      {title}
-    </div>
-    <div style={{ fontSize: 28, lineHeight: 1.5, color: c.muted }}>{body}</div>
-  </div>
-);
 
-const PlanRow = ({
-  n,
-  title,
-  body,
-  minutes,
-}: {
-  n: string;
-  title: string;
-  body: string;
-  minutes: string;
-}) => (
-  <div style={{ display: 'flex', alignItems: 'baseline', gap: 32 }}>
-    <span
-      style={{
-        fontFamily: mono,
-        fontSize: 32,
-        color: 'var(--osd-accent)',
-        width: 60,
-        flexShrink: 0,
-      }}
-    >
-      {n}
-    </span>
-    <span style={{ fontSize: 40, lineHeight: 1.3, fontWeight: 650, width: 360, flexShrink: 0 }}>
-      {title}
-    </span>
-    <span style={{ fontSize: 32, lineHeight: 1.4, color: c.muted, flex: 1 }}>{body}</span>
-    <span
-      style={{
-        fontFamily: mono,
-        fontSize: 28,
-        color: 'var(--osd-accent)',
-        width: 150,
-        flexShrink: 0,
-        textAlign: 'right',
-      }}
-    >
-      {minutes}
-    </span>
-  </div>
-);
 
-const ObjectRow = ({
-  family,
-  acronym,
-  question,
-  dir,
-}: {
-  family: string;
-  acronym: string;
-  question: string;
-  dir: string;
-}) => (
-  <div
-    style={{
-      display: 'flex',
-      alignItems: 'center',
-      gap: 36,
-      border: `1px solid ${c.rule}`,
-      borderRadius: 'var(--osd-radius)',
-      background: c.panel,
-      padding: '26px 32px',
-    }}
-  >
-    <span style={{ fontSize: 38, lineHeight: 1.2, fontWeight: 700, width: 240, flexShrink: 0 }}>
-      {family}
-    </span>
-    <span
-      style={{
-        fontFamily: mono,
-        fontSize: 26,
-        color: 'var(--osd-accent)',
-        width: 90,
-        flexShrink: 0,
-      }}
-    >
-      {acronym}
-    </span>
-    <span style={{ fontSize: 30, lineHeight: 1.4, color: c.soft, flex: 1 }}>{question}</span>
-    <span style={{ fontFamily: mono, fontSize: 24, color: c.muted, flexShrink: 0 }}>{dir}</span>
-  </div>
-);
 
-const ChainBox = ({
-  title,
-  schema,
-  tint,
-}: {
-  title: string;
-  schema: string;
-  tint: string;
-}) => (
-  <div
-    style={{
-      width: 380,
-      flexShrink: 0,
-      border: `1px solid ${tint}`,
-      borderRadius: 'var(--osd-radius)',
-      background: c.panel,
-      padding: '34px 32px',
-      textAlign: 'center',
-    }}
-  >
-    <div style={{ fontSize: 42, lineHeight: 1.2, fontWeight: 700 }}>{title}</div>
-    <div style={{ fontFamily: mono, fontSize: 24, color: tint, marginTop: 14 }}>{schema}</div>
-  </div>
-);
 
-// Reading order is threat → rule (coverage); the YAML reference points back the
-// other way, so each connector carries both directions.
-const Arrow = ({ coverage, reference }: { coverage: string; reference: string }) => (
-  <div style={{ width: 250, textAlign: 'center', flexShrink: 0 }}>
-    <div style={{ fontSize: 22, color: c.muted, marginBottom: 12, whiteSpace: 'nowrap' }}>
-      {coverage} →
-    </div>
-    <div style={{ height: 2, background: c.rule }} />
-    <div
-      style={{
-        fontFamily: mono,
-        fontSize: 21,
-        color: 'var(--osd-accent)',
-        marginTop: 12,
-        whiteSpace: 'nowrap',
-      }}
-    >
-      ← {reference}
-    </div>
-  </div>
-);
 
-const StatusRow = ({
-  status,
-  strategy,
-  meaning,
-}: {
-  status: string;
-  strategy: string;
-  meaning: string;
-}) => (
-  <div style={{ display: 'flex', alignItems: 'baseline', gap: 32 }}>
-    <span
-      style={{
-        fontFamily: mono,
-        fontSize: 28,
-        color: 'var(--osd-text)',
-        width: 320,
-        flexShrink: 0,
-      }}
-    >
-      {status}
-    </span>
-    <span
-      style={{
-        fontFamily: mono,
-        fontSize: 26,
-        color: 'var(--osd-accent)',
-        width: 300,
-        flexShrink: 0,
-      }}
-    >
-      {strategy}
-    </span>
-    <span style={{ fontSize: 28, lineHeight: 1.4, color: c.muted }}>{meaning}</span>
-  </div>
-);
 
-const ToolRow = ({ tool, what }: { tool: string; what: string }) => (
-  <div style={{ display: 'flex', alignItems: 'baseline', gap: 32 }}>
-    <span
-      style={{
-        fontFamily: mono,
-        fontSize: 26,
-        color: 'var(--osd-accent)',
-        width: 560,
-        flexShrink: 0,
-      }}
-    >
-      {tool}
-    </span>
-    <span style={{ fontSize: 30, lineHeight: 1.4, color: c.soft }}>{what}</span>
-  </div>
-);
 
-const Bullet = ({ children }: { children: ReactNode }) => (
-  <li
-    style={{
-      display: 'flex',
-      gap: 24,
-      fontSize: 34,
-      lineHeight: 1.45,
-      color: c.soft,
-      marginBottom: 26,
-      listStyle: 'none',
-    }}
-  >
-    <span style={{ color: 'var(--osd-accent)', flexShrink: 0 }}>—</span>
-    <span>{children}</span>
-  </li>
-);
 
 // Shared chart scaffolding for the three knowledge-curve pages.
 // The viewBox maps 1:1 onto the 1700px content width, so every number below is
@@ -545,47 +278,6 @@ const Divider = ({
 
 // ─── Pages ────────────────────────────────────────────────────────────────────
 
-const Cover: Page = () => (
-  <div
-    style={{
-      ...fill,
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'center',
-      padding: '0 140px',
-    }}
-  >
-    <img src={logo} alt="OpenTIDE" style={{ width: 140, height: 140 }} />
-    <div
-      style={{
-        fontSize: 26,
-        fontWeight: 700,
-        letterSpacing: '0.22em',
-        color: 'var(--osd-accent)',
-        marginTop: 48,
-      }}
-    >
-      HANDS-ON WORKSHOP · 90 MINUTES
-    </div>
-    <h1
-      style={{
-        fontFamily: 'var(--osd-font-display)',
-        fontSize: 'var(--osd-size-hero)',
-        lineHeight: 1.02,
-        fontWeight: 900,
-        margin: '24px 0 0',
-      }}
-    >
-      OpenTIDE Workshop
-    </h1>
-    <p style={{ fontSize: 48, lineHeight: 1.35, color: c.soft, margin: '30px 0 0', maxWidth: 1400 }}>
-      Build Your Own Operational DetectionOps Platform in 90 Minutes
-    </p>
-    <div style={{ fontFamily: mono, fontSize: 26, color: c.dim, marginTop: 40 }}>
-      python 3.10–3.14 · pip install opentide · opentide.org
-    </div>
-  </div>
-);
 
 // Title page for hack.lu 2026: what OpenTIDE stands for, where it comes from,
 // and the licence it ships under.
@@ -693,93 +385,8 @@ const TitleLT: Page = () => (
   </div>
 );
 
-const WhatIsIt: Page = () => (
-  <Shell eyebrow="CONTEXT" title="OpenTide is the DetectionOps engine">
-    <Lede>
-      One Python package for detection-as-code. Point it at a repository of YAML detection content
-      and it becomes the toolchain around that content: schemas, validation, documentation, and
-      deployment to seven security platforms.
-    </Lede>
-    <div style={{ display: 'flex', gap: 36, marginTop: 56 }}>
-      <Card
-        kicker="VALIDATE"
-        title="Content you can trust"
-        body="Schema checks, UUID uniqueness, cross-object references, filename and metadata lint."
-      />
-      <Card
-        kicker="GENERATE"
-        title="Artifacts, not handwork"
-        body="JSON Schemas, templates, IDE snippets, exports, and wiki-style object documentation."
-      />
-      <Card
-        kicker="DEPLOY"
-        title="Rules onto platforms"
-        body="One rule, many platform blocks. Dry-run first, then push to staging or production."
-      />
-    </div>
-  </Shell>
-);
 
-const Plan: Page = () => (
-  <Shell eyebrow="THE PLAN" title="Seventy-five minutes, mostly prompting">
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 26 }}>
-      <PlanRow
-        n="01"
-        title="Bootstrap"
-        body="install the package, wire the agent into your editor"
-        minutes="10 min"
-      />
-      <PlanRow
-        n="02"
-        title="Configure"
-        body="the agent interviews you, then scaffolds the repository"
-        minutes="10 min"
-      />
-      <PlanRow
-        n="03"
-        title="TI to rule"
-        body="one intel snippet down to a validated threat, objective and rule"
-        minutes="20 min"
-      />
-      <PlanRow
-        n="04"
-        title="Validate & ship"
-        body="strict gates, query check, dry-run deploy, CI"
-        minutes="20 min"
-      />
-      <PlanRow
-        n="05"
-        title="Document"
-        body="wiki pages and coverage diagrams, generated"
-        minutes="5 min"
-      />
-      <PlanRow
-        n="06"
-        title="Share"
-        body="publish to MISP with the key we gave you"
-        minutes="5 min"
-      />
-      <PlanRow n="07" title="Wrap-up" body="guardrails, cheat sheet, where to go next" minutes="5 min" />
-    </div>
-    <div style={{ marginTop: 40 }}>
-      <Note>
-        You type one block of commands, in step 01. After that the agent drives and you review. You
-        leave with a repository that validates clean and a rule ready to deploy.
-      </Note>
-    </div>
-  </Shell>
-);
 
-// Full-bleed image, nothing else — no title, no footer.
-const Flacon: Page = () => (
-  <div style={{ ...fill }}>
-    <img
-      src={flacon}
-      alt="An OpenTIDE perfume bottle"
-      style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
-    />
-  </div>
-);
 
 // Logos feeding the bottle. Cards are absolutely positioned on the 1920×1080
 // canvas; the arrow overlay sits between the photo and the cards.
@@ -958,83 +565,6 @@ const FlaconSources: Page = () => (
   </div>
 );
 
-const HandoverGap: Page = () => (
-  <Shell eyebrow="WHY THIS EXISTS" title="Knowledge is lost at the hand-over">
-    <AxisFrame title="Threat analyst knowledge rises, drops at the hand-over, and the detection engineer has to relearn from a lower starting point.">
-      {/* threat analyst */}
-      <line x1={130} y1={380} x2={760} y2={105} stroke={c.ta} strokeWidth={5} />
-      <circle cx={760} cy={105} r={9} fill={c.ta} />
-      {/* label rides the slope so it never crosses the line */}
-      <text
-        x={260}
-        y={306}
-        fill={c.ta}
-        fontSize={30}
-        fontWeight={650}
-        transform="rotate(-23.6 260 306)"
-      >
-        Threat analyst
-      </text>
-
-      {/* the level the analyst reached, for comparison */}
-      <line
-        x1={760}
-        y1={105}
-        x2={1640}
-        y2={105}
-        stroke={c.ta}
-        strokeWidth={2}
-        strokeDasharray="6 10"
-        opacity={0.5}
-      />
-      <text x={1630} y={92} fill={c.ta} fontSize={24} textAnchor="end" opacity={0.85}>
-        depth the analyst had
-      </text>
-
-      {/* hand-over */}
-      <line
-        x1={760}
-        y1={90}
-        x2={760}
-        y2={400}
-        stroke={c.rule}
-        strokeWidth={2}
-        strokeDasharray="8 10"
-      />
-      <text x={760} y={62} fill={c.soft} fontSize={26} textAnchor="middle">
-        hand-over: PDF, wiki, slides
-      </text>
-
-      {/* the drop */}
-      <line x1={800} y1={115} x2={800} y2={280} stroke={c.yellow} strokeWidth={3} />
-      <polygon points="800,296 791,276 809,276" fill={c.yellow} />
-      <text x={822} y={222} fill={c.yellow} fontSize={28} fontWeight={650}>
-        knowledge lost
-      </text>
-
-      {/* detection engineer */}
-      <line x1={760} y1={320} x2={1640} y2={150} stroke={c.de} strokeWidth={5} />
-      <circle cx={760} cy={320} r={9} fill={c.de} />
-      <circle cx={1640} cy={150} r={9} fill={c.de} />
-      <text x={1120} y={200} fill={c.de} fontSize={30} fontWeight={650} textAnchor="middle">
-        Detection engineer
-      </text>
-      <text x={1085} y={372} fill={c.muted} fontSize={24} textAnchor="middle">
-        relearn the threat before writing anything
-      </text>
-      <text x={1630} y={252} fill={c.soft} fontSize={26} textAnchor="end">
-        objectives + rules
-      </text>
-    </AxisFrame>
-    <div style={{ marginTop: 36 }}>
-      <Note>
-        Two teams, two curves, a cliff between them. The analyst's depth never transfers — it is
-        flattened into prose, and the engineer rebuilds it from a lower starting point and rarely
-        gets back to the same level.
-      </Note>
-    </div>
-  </Shell>
-);
 
 const AttackOnly: Page = () => (
   <Shell eyebrow="WHY THIS EXISTS" title="ATT&CK technique IDs are a weak link">
@@ -1214,68 +744,7 @@ const WithOpenTide: Page = () => (
   </Shell>
 );
 
-const Objects: Page = () => (
-  <Shell eyebrow="THE MODEL" title="Three object families under objects">
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
-      <ObjectRow
-        family="Threat"
-        acronym="TVM"
-        question="What do we defend against?"
-        dir="objects/threats/"
-      />
-      <ObjectRow
-        family="Objective"
-        acronym="DOM"
-        question="What are we trying to detect?"
-        dir="objects/objectives/"
-      />
-      <ObjectRow
-        family="Rule"
-        acronym="MDR"
-        question="How do we detect it, on which platform?"
-        dir="objects/rules/"
-      />
-    </div>
-    <div style={{ marginTop: 44 }}>
-      <Note>
-        Every object is YAML with a top-level <code style={{ fontFamily: mono }}>name</code> and a
-        shared <code style={{ fontFamily: mono }}>metadata</code> block. The UUID is the identity —
-        rename and move files freely.
-      </Note>
-    </div>
-  </Shell>
-);
 
-const Chain: Page = () => (
-  <Shell eyebrow="THE MODEL" title="Turn TI in actionable objects down to rules">
-    <div
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        gap: 10,
-      }}
-    >
-      <ChainBox title="Threat" schema="threat::1.0" tint={c.green} />
-      <Arrow coverage="is covered by" reference="objective.threats" />
-      <ChainBox title="Objective" schema="objective::1.0" tint={c.blue} />
-      <Arrow coverage="is implemented by" reference="detection_model" />
-      <ChainBox title="Rule" schema="rule::1.0" tint={c.pt} />
-    </div>
-    <div style={{ marginTop: 60, display: 'flex', flexDirection: 'column', gap: 26 }}>
-      <Note>
-        Coverage reads left to right; the YAML reference points back the other way, in blue. Keep
-        the graph a DAG — the validator rejects duplicate UUIDs, dangling references, and loops.
-      </Note>
-      <Code size={26}>{`opentide info                                      # objects and their links
-opentide --json info --technique T1059 coverage    # coverage for one technique`}</Code>
-    </div>
-  </Shell>
-);
-
-// ─── Slides 10 + 11 merged: the stack, in three layers ────────────────────────
-// Layer 1 the object chain, layer 2 the status a rule moves through, layer 3
-// the platforms it lands on. Each band is compact so all three fit one canvas.
 
 const LayerHead = ({ n, name, sub }: { n: string; name: string; sub: string }) => (
   <div style={{ display: 'flex', alignItems: 'baseline', gap: 14, marginBottom: 12 }}>
@@ -2281,1055 +1750,191 @@ const AgentLoopLT: Page = () => (
   </Shell>
 );
 
-const CheckItem = ({ children, tint }: { children: ReactNode; tint: string }) => (
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// ─── Generated artefacts ──────────────────────────────────────────────────────
+// Docs, exports and MISP sharing, condensed from the five document/share pages
+// of the long deck. Every command here is one the CLI actually ships.
+
+const Cmd = ({ children }: { children: string }) => (
+  <pre
+    style={{
+      margin: '16px 0 0',
+      padding: '14px 16px',
+      border: `1px solid ${c.rule}`,
+      borderRadius: 10,
+      background: c.panel,
+      fontFamily: mono,
+      fontSize: 18,
+      lineHeight: 1.5,
+      color: c.soft,
+      whiteSpace: 'pre',
+      overflow: 'hidden',
+    }}
+  >
+    {children}
+  </pre>
+);
+
+const PromoPoint = ({ children }: { children: ReactNode }) => (
   <li
     style={{
       display: 'flex',
-      gap: 18,
-      fontSize: 30,
+      gap: 12,
+      fontSize: 23,
       lineHeight: 1.4,
-      color: c.soft,
-      marginBottom: 20,
+      color: c.muted,
+      marginTop: 14,
       listStyle: 'none',
     }}
   >
-    <span style={{ color: tint, flexShrink: 0, fontWeight: 700 }}>✓</span>
+    <span style={{ color: 'var(--osd-accent)', flexShrink: 0 }}>—</span>
     <span>{children}</span>
   </li>
 );
 
-const ReqColumn = ({
+const PromoCol = ({
   kicker,
-  tint,
+  title,
+  cmd,
   children,
 }: {
   kicker: string;
-  tint: string;
+  title: string;
+  cmd: string;
   children: ReactNode;
 }) => (
   <div
     style={{
       flex: 1,
+      minWidth: 0,
       border: `1px solid ${c.rule}`,
       borderRadius: 'var(--osd-radius)',
-      background: c.panel,
-      padding: '30px 34px',
+      background: '#ffffff',
+      padding: '26px 28px',
+      display: 'flex',
+      flexDirection: 'column',
     }}
   >
     <div
       style={{
         fontFamily: mono,
-        fontSize: 22,
-        color: tint,
+        fontSize: 20,
+        color: 'var(--osd-accent)',
         letterSpacing: '0.1em',
-        marginBottom: 24,
       }}
     >
       {kicker}
     </div>
-    <ul style={{ margin: 0, padding: 0 }}>{children}</ul>
+    <div style={{ fontSize: 31, lineHeight: 1.2, fontWeight: 700, marginTop: 12 }}>{title}</div>
+    <Cmd>{cmd}</Cmd>
+    <ul style={{ margin: '6px 0 0', padding: 0 }}>{children}</ul>
   </div>
 );
 
-const Prerequisites: Page = () => (
-  <Shell eyebrow="BEFORE YOU ARRIVE" title="Prerequisites — five minutes, done the night before">
-    <div style={{ display: 'flex', gap: 32 }}>
-      <ReqColumn kicker="YOU BRING" tint={c.green}>
-        <CheckItem tint={c.green}>Python 3.10–3.14, and the rights to install packages</CheckItem>
-        <CheckItem tint={c.green}>Git, plus a GitHub account — you will push a repo and let CI run</CheckItem>
-        <CheckItem tint={c.green}>
-          An agent in your editor: Cursor, Claude Code, VS Code + Copilot, or any MCP host
-        </CheckItem>
-        <CheckItem tint={c.green}>Network access to PyPI and github.com</CheckItem>
-      </ReqColumn>
-      <ReqColumn kicker="WE PROVIDE" tint={c.blue}>
-        <CheckItem tint={c.blue}>A MISP URL and API key, for the sharing section</CheckItem>
-        <CheckItem tint={c.blue}>A Splunk URL and token, for a real deploy target</CheckItem>
-        <CheckItem tint={c.blue}>A short intel report — the input for the authoring section</CheckItem>
-        <CheckItem tint={c.blue}>Nothing to install for those: keys go in a local .env</CheckItem>
-      </ReqColumn>
+const GeneratedArtefacts: Page = () => (
+  <Shell eyebrow="GENERATED ARTEFACTS" title="Write the objects once, get the rest for free">
+    <Lede>
+      Documentation, coverage exports and sharing are not side projects — they fall out of the
+      validated objects, so they cannot drift from what you actually run.
+    </Lede>
+
+    <div style={{ display: 'flex', alignItems: 'stretch', gap: 28, marginTop: 30 }}>
+      <PromoCol
+        kicker="DOCS"
+        title="A wiki that cannot go stale"
+        cmd={'opentide generate docs\nopentide generate docs --changed'}
+      >
+        <PromoPoint>
+          A markdown page per threat, objective and rule, with Mermaid chain diagrams
+        </PromoPoint>
+        <PromoPoint>
+          Backlinked both ways: rule → signal → objective → threat, and back down
+        </PromoPoint>
+        <PromoPoint>Flavours for GitHub, GitLab and Azure DevOps</PromoPoint>
+      </PromoCol>
+
+      <PromoCol
+        kicker="EXPORTS"
+        title="Coverage you can show a board"
+        cmd={'opentide generate exports navigator\nopentide generate explorer'}
+      >
+        <PromoPoint>
+          ATT&CK Navigator layer 4.5 —{' '}
+          <span style={{ color: c.green }}>covered</span>,{' '}
+          <span style={{ color: c.red }}>a real gap</span>,{' '}
+          <span style={{ color: c.blue }}>a rule with no threat behind it</span>
+        </PromoPoint>
+        <PromoPoint>
+          Graph explorer: the whole catalogue as a static site, with a prebuilt search index and no
+          backend to patch
+        </PromoPoint>
+      </PromoCol>
+
+      <PromoCol
+        kicker="SHARE"
+        title="Publish objects to MISP"
+        cmd={'opentide share preview\nopentide share push --changed'}
+      >
+        <PromoPoint>One MISP Event per object — preview first, which makes no request</PromoPoint>
+        <PromoPoint>
+          <code style={{ fontFamily: mono }}>max_tlp</code> is a hard ceiling per destination, so a
+          TLP:AMBER object cannot leave
+        </PromoPoint>
+        <PromoPoint>
+          Sharing is not deployment: a destination is a MISP instance, not a platform
+        </PromoPoint>
+      </PromoCol>
     </div>
-    <div style={{ marginTop: 34 }}>
-      <Note>
-        No cloud account needed and no Sentinel tenant. If your laptop is locked down, the blocker is
-        almost always outbound HTTPS — the agent skills are fetched from{' '}
-        <code style={{ fontFamily: mono }}>github.com/OpenTideHQ/skills</code> at setup time.
-      </Note>
-    </div>
-  </Shell>
-);
 
-const DividerInstall: Page = () => (
-  <Divider
-    number="01"
-    minutes="10 min"
-    title="Bootstrap"
-    subtitle="Install the package, wire your agent, then stop typing commands."
-  />
-);
-
-const Bootstrap: Page = () => (
-  <Shell eyebrow="01 · BOOTSTRAP" title="The only block you type by hand">
-    <Code label="shell" size={25}>{`python -m venv .venv && source .venv/bin/activate
-
-pip install 'opentide[mcp]==0.12.1'     # CLI + MCP server + all seven platforms
-pip install 'opentide[splunk]'          # live Splunk deploy needs splunk-sdk
-
-opentide setup mcp    --cursor --yes    # writes .cursor/mcp.json
-opentide setup skills --cursor --yes    # writes .agents/skills/ and mirrors it`}</Code>
-    <div style={{ marginTop: 36, display: 'flex', flexDirection: 'column', gap: 24 }}>
-      <Lede>
-        Swap <code style={{ fontFamily: mono }}>--cursor</code> for{' '}
-        <code style={{ fontFamily: mono }}>--vscode</code>,{' '}
-        <code style={{ fontFamily: mono }}>--claude-code</code>, or{' '}
-        <code style={{ fontFamily: mono }}>--generic</code>. Then reload the MCP server in your host.
-      </Lede>
-      <Note>
-        This block is manual for one reason: the agent cannot write the config that gives it tools.
-        After this slide, everything is a prompt rather than a command.
-      </Note>
-    </div>
-  </Shell>
-);
-
-const AgentSurface: Page = () => (
-  <Shell eyebrow="01 · BOOTSTRAP" title="What your agent just gained">
-    <Code label="9 tools, over stdio" size={22}>{`search               find objects by keyword, UUID, technique, actor
-get_chaining         threat → objective → rule graph for a UUID
-coverage             ATT&CK coverage and the gaps
-validate_rule        one rule against its schema
-validation_report    the whole registry, structured
-validate_query       tenant check — refuses unless live: true
-run_query            stub: never contacts a tenant, never returns rows
-deploy_rule          dry_run: true by default
-deployment_status    per-platform state for a rule`}</Code>
-    <div style={{ marginTop: 30, display: 'flex', flexDirection: 'column', gap: 22 }}>
-      <Lede>
-        Plus 12 read-only resources — <code style={{ fontFamily: mono }}>opentide://threats</code>,{' '}
-        <code style={{ fontFamily: mono }}>objectives</code>,{' '}
-        <code style={{ fontFamily: mono }}>rules</code>,{' '}
-        <code style={{ fontFamily: mono }}>schemas</code>,{' '}
-        <code style={{ fontFamily: mono }}>templates</code>,{' '}
-        <code style={{ fontFamily: mono }}>vocabularies</code> — and four authoring skills.
-      </Lede>
-      <Note>
-        Note what is <em>not</em> there: no tool writes a file, and no tool runs setup. The agent
-        edits YAML itself and shells out to the CLI, so every change lands in your diff.
-      </Note>
-    </div>
-  </Shell>
-);
-
-const PointAtRepo: Page = () => (
-  <Shell eyebrow="01 · BOOTSTRAP" title="Both of you need the same repository root">
-    <Code label="your shell, and the MCP server's env block" size={25}>{`export OPENTIDE_REPO_ROOT=/path/to/detection-repo    # your terminal
-
-# .cursor/mcp.json — written by setup mcp
-{"mcpServers": {"opentide": {"command": "opentide", "args": ["mcp", "start"],
-  "env": {"OPENTIDE_REPO_ROOT": "\${workspaceFolder}"}}}}`}</Code>
-    <div style={{ marginTop: 36, display: 'flex', flexDirection: 'column', gap: 24 }}>
-      <Lede>
-        Unset, the server walks up from its working directory looking for{' '}
-        <code style={{ fontFamily: mono }}>.opentide/</code> or{' '}
-        <code style={{ fontFamily: mono }}>objects/</code>.
-      </Lede>
-      <Note>
-        The classic first-hour failure: your shell and your agent pointing at different repositories,
-        so the agent reports a clean catalogue you cannot see. Ask it to run{' '}
-        <code style={{ fontFamily: mono }}>opentide info</code> and compare.
-      </Note>
-    </div>
-  </Shell>
-);
-
-const DividerScaffold: Page = () => (
-  <Divider
-    number="02"
-    minutes="10 min"
-    title="Configure"
-    subtitle="The agent interviews you, then runs the setup commands for you."
-  />
-);
-
-const AskRow = ({
-  question,
-  options,
-  flag,
-}: {
-  question: string;
-  options: string;
-  flag: string;
-}) => (
-  <div
-    style={{
-      display: 'flex',
-      alignItems: 'center',
-      gap: 28,
-      border: `1px solid ${c.rule}`,
-      borderRadius: 'var(--osd-radius)',
-      background: c.panel,
-      padding: '20px 28px',
-    }}
-  >
-    <span style={{ fontSize: 28, lineHeight: 1.3, fontWeight: 650, width: 360, flexShrink: 0 }}>
-      {question}
-    </span>
-    <span style={{ fontFamily: mono, fontSize: 23, color: c.blue, flex: 1 }}>{options}</span>
-    <span style={{ fontFamily: mono, fontSize: 21, color: c.muted, flexShrink: 0 }}>{flag}</span>
-  </div>
-);
-
-const AgentInterview: Page = () => (
-  <Shell eyebrow="02 · CONFIGURE" title="The agent asks, you choose">
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-      <AskRow question="Name and organisation?" options="free text" flag="--name  --org" />
-      <AskRow
-        question="Which detection platforms?"
-        options="sentinel · splunk · crowdstrike · defender_for_endpoint · …"
-        flag="setup platforms"
-      />
-      <AskRow question="Which CI provider?" options="github · gitlab · azure" flag="setup ci" />
-      <AskRow
-        question="Which editor gets MCP?"
-        options="vscode · cursor · claude-code · generic"
-        flag="setup mcp"
-      />
-      <AskRow
-        question="Which agent gets the skills?"
-        options="cursor · claude-code · generic · github-copilot"
-        flag="setup skills"
-      />
-      <AskRow question="Validate on every commit?" options="yes · no" flag="setup hooks" />
-    </div>
-    <div style={{ marginTop: 32 }}>
-      <Note>
-        These are the real option sets, not a wish list — the agent is choosing flags it has to get
-        right. Today answer GitHub, Sentinel and Splunk, and your own editor.
-      </Note>
-    </div>
-  </Shell>
-);
-
-const AgentRunsSetup: Page = () => (
-  <Shell eyebrow="02 · CONFIGURE" title="What it runs once you have answered">
-    <Code label="the agent shells out — you watch the diff" size={24}>{`opentide setup repo      --name "SOC Detections" --org "Example Corp" --yes
-opentide setup platforms --sentinel --splunk --yes
-opentide setup ci        github --yes      # positional: github | gitlab | azure
-opentide setup hooks     --yes             # validate-on-commit
-opentide setup env       --yes             # .env.example, and .env git-ignored`}</Code>
-    <div style={{ marginTop: 34, display: 'flex', flexDirection: 'column', gap: 22 }}>
-      <Lede>
-        Order is not cosmetic: <code style={{ fontFamily: mono }}>setup ci</code> reads the enabled
-        platform files to decide which query-validation jobs to write, so platforms come first.
-      </Lede>
-      <Note>
-        Every command carries <code style={{ fontFamily: mono }}>--yes</code>, because an agent that
-        hits an interactive prompt hangs. That also means you, not the prompt, are the confirmation
-        step — read the commands before you approve them.
-      </Note>
-    </div>
-  </Shell>
-);
-
-const Layout: Page = () => (
-  <Shell eyebrow="02 · CONFIGURE" title="What the agent just wrote">
-    <div style={{ display: 'flex', gap: 36 }}>
-      <div style={{ flex: 1 }}>
-        <Code label="repository" size={25}>{`detection-repo/
-├── objects/
-│   ├── threats/
-│   ├── objectives/
-│   └── rules/
-├── .opentide/
-│   ├── configurations/
-│   └── states/
-├── .agents/skills/
-└── .github/workflows/`}</Code>
-      </div>
-      <div style={{ flex: 1 }}>
-        <Code label=".opentide/configurations/" size={25}>{`paths.toml          # layout
-deployment.toml     # statuses, promotion
-schema.toml         # vocab extensions
-sharing.toml        # MISP destinations
-documentation.toml  # docs output
-platforms/
-├── sentinel.toml
-└── splunk.toml`}</Code>
-      </div>
-    </div>
-    <div style={{ marginTop: 36 }}>
-      <Note>
-        Configuration is layered: package defaults → bundled platform configs → your workspace. You
-        only ever edit your workspace, and only the keys you care about.
-      </Note>
-    </div>
-  </Shell>
-);
-
-const DividerAuthor: Page = () => (
-  <Divider
-    number="03"
-    minutes="20 min"
-    title="TI to rule"
-    subtitle="One intel snippet becomes a threat, an objective with signals, and a rule."
-  />
-);
-
-const GenerateFirst: Page = () => (
-  <Shell eyebrow="03 · AUTHOR" title="The agent's first move: generate">
-    <Code label="opentide generate" size={26}>{`== Object vocabulary generation ==
-== Template generation ==
-== JSON schema generation ==
-OK Full generation pipeline completed`}</Code>
-    <div style={{ marginTop: 36, display: 'flex', flexDirection: 'column', gap: 24 }}>
-      <Lede>
-        The authoring skills all open the same way: generate, then start from the template. Schemas
-        land in <code style={{ fontFamily: mono }}>.opentide/schemas/</code>, templates in{' '}
-        <code style={{ fontFamily: mono }}>.opentide/templates/</code>.
-      </Lede>
-      <Note>
-        This is why the agent generates before it writes a line of YAML: validation compares objects
-        against those schemas, and the MCP schema resource answers{' '}
-        <code style={{ fontFamily: mono }}>run 'opentide generate schemas'</code> until they exist.
-      </Note>
-    </div>
-  </Shell>
-);
-
-const TiInput: Page = () => (
-  <Shell eyebrow="03 · AUTHOR" title="The input: five sentences of intel">
-    <Code label="paste this into your agent" size={25}>{`A finance user forwarded a Teams message linking to a Microsoft
-device-code page. Entra sign-in logs show a successful device-code
-grant from a hosting ASN, minutes after the message was opened.
-
-The session then consented to an OAuth application and created an
-inbox rule forwarding mail externally. Tradecraft overlaps with
-public reporting on Midnight Blizzard / APT29.`}</Code>
-    <div style={{ marginTop: 34, display: 'flex', flexDirection: 'column', gap: 22 }}>
-      <Lede>
-        That is the whole input. No IOC list, no STIX bundle, no template to fill in — the shape of a
-        real hand-over.
-      </Lede>
-      <Note>
-        There is no TI import command, and that is the honest framing: the agent reads prose and
-        drafts objects using the shape rules in its skills. OpenTide checks the result; it does not
-        do the reading.
-      </Note>
-    </div>
-  </Shell>
-);
-
-const AgentStep = ({
-  n,
-  skill,
-  writes,
-  links,
-}: {
-  n: string;
-  skill: string;
-  writes: string;
-  links: ReactNode;
-}) => (
-  <div
-    style={{
-      display: 'flex',
-      alignItems: 'flex-start',
-      gap: 30,
-      border: `1px solid ${c.rule}`,
-      borderRadius: 'var(--osd-radius)',
-      background: c.panel,
-      padding: '24px 30px',
-    }}
-  >
-    <span
-      style={{ fontFamily: mono, fontSize: 30, color: 'var(--osd-accent)', flexShrink: 0, width: 44 }}
-    >
-      {n}
-    </span>
-    <div style={{ width: 400, flexShrink: 0 }}>
-      <div style={{ fontFamily: mono, fontSize: 23, color: c.pt }}>{skill}</div>
-      <div style={{ fontFamily: mono, fontSize: 21, color: c.muted, marginTop: 8 }}>{writes}</div>
-    </div>
-    <div style={{ fontSize: 27, lineHeight: 1.45, color: c.soft, flex: 1 }}>{links}</div>
-  </div>
-);
-
-const AgentToChain: Page = () => (
-  <Shell eyebrow="03 · AUTHOR" title="Three objects, three skills, one chain">
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
-      <AgentStep
-        n="01"
-        skill="opentide-threat-vector"
-        writes="objects/threats/"
-        links={
-          <>
-            Names the tradecraft and the actor, tags{' '}
-            <code style={{ fontFamily: mono }}>T1566.002</code> and{' '}
-            <code style={{ fontFamily: mono }}>T1078</code>
-          </>
-        }
-      />
-      <AgentStep
-        n="02"
-        skill="opentide-detection-objective"
-        writes="objects/objectives/"
-        links={
-          <>
-            Lists the threat UUID under <code style={{ fontFamily: mono }}>objective.threats</code>,
-            then decomposes it into signals, each with its own UUID
-          </>
-        }
-      />
-      <AgentStep
-        n="03"
-        skill="opentide-detection-rule"
-        writes="objects/rules/"
-        links={
-          <>
-            Points <code style={{ fontFamily: mono }}>detection_model</code> at one signal and writes
-            a query per platform under <code style={{ fontFamily: mono }}>configurations</code>
-          </>
-        }
-      />
-    </div>
-    <div style={{ marginTop: 30 }}>
-      <Note>
-        The agent mints fresh UUIDs — it never copies the ones on these slides. Each skill is a shape
-        contract rather than a prompt: where the file goes, which fields are required, what to run to
-        check it.
-      </Note>
-    </div>
-  </Shell>
-);
-
-const ChainYaml: Page = () => (
-  <Shell eyebrow="03 · AUTHOR" title="What came back, and how it is wired">
-    <div style={{ display: 'flex', gap: 22 }}>
-      <div style={{ flex: 1 }}>
-        <Code label="objects/threats/" size={20}>{`name: Device Code Phishing
-metadata:
-  uuid: 1f0a…8001
-  schema: threat::1.0
-  tlp: amber
-threat:
-  severity: Substantial incident
-  impact: [Data Breach]
-  att&ck: [T1566.002, T1078]
-  actors:
-    - name: att&ck::G0016`}</Code>
-      </div>
-      <div style={{ flex: 1 }}>
-        <Code label="objects/objectives/" size={20}>{`name: Illicit Device Code Grant
-metadata:
-  uuid: 1f0a…8002
-  schema: objective::1.0
-objective:
-  priority: High
-  threats:
-    - 1f0a…8001      # the threat
-  signals:
-    - name: Device code grant
-      uuid: 1f0a…8099`}</Code>
-      </div>
-      <div style={{ flex: 1 }}>
-        <Code label="objects/rules/" size={20}>{`name: Entra Device Code Auth
-metadata:
-  uuid: 1f0a…8003
-  schema: rule::1.0
-status: STAGING
-techniques: [T1078]
-detection_model: 1f0a…8099
-                 # the signal
-configurations:
-  sentinel: {…}
-  splunk:   {…}`}</Code>
-      </div>
-    </div>
-    <div style={{ marginTop: 32 }}>
-      <Note>
-        Two references carry the whole model: an objective naming its threats, and a rule naming the
-        one signal it implements. Everything else on these three files is description.
-      </Note>
-    </div>
-  </Shell>
-);
-
-const RuleConfig: Page = () => (
-  <Shell eyebrow="03 · AUTHOR" title="One rule, one block per platform">
-    <div style={{ display: 'flex', gap: 26 }}>
-      <div style={{ flex: 1 }}>
-        <Code label="configurations.sentinel" size={22}>{`enabled: true
-name: Entra Device Code Auth
-status: STAGING
-query: |
-  SigninLogs
-  | where AuthenticationProtocol
-      == "deviceCode"
-  | where ResultType == 0
-scheduling:
-  frequency: PT1H
-  lookback: PT2H`}</Code>
-      </div>
-      <div style={{ flex: 1 }}>
-        <Code label="configurations.splunk" size={22}>{`enabled: true
-name: Entra Device Code Auth
-status: STAGING
-query: |
-  index=azuread
-    authProtocol=deviceCode
-    resultType=0
-  | stats count by user, srcIp
-correlation_search: true
-enterprise_security: true`}</Code>
-      </div>
-    </div>
-    <div style={{ marginTop: 32 }}>
-      <Note>
-        Same objective, same signal, two tenants. Ask the agent for the Splunk block and it writes
-        SPL beside the KQL — the model does not change, only the dialect.
-      </Note>
-    </div>
-  </Shell>
-);
-
-const ReviewGate: Page = () => (
-  <Shell eyebrow="03 · AUTHOR" title="You review, the validator decides">
-    <ul style={{ margin: 0, paddingLeft: 44, marginTop: 4 }}>
-      <Bullet>A vocabulary value that reads well and does not exist — the commonest invention</Bullet>
-      <Bullet>
-        A <code style={{ fontFamily: mono }}>detection_model</code> pointing at a UUID it never wrote
-      </Bullet>
-      <Bullet>
-        A <code style={{ fontFamily: mono }}>status</code> that is not in the merged{' '}
-        <code style={{ fontFamily: mono }}>deployment.toml</code>
-      </Bullet>
-      <Bullet>A query that parses perfectly and detects the wrong thing</Bullet>
-    </ul>
-    <div style={{ marginTop: 26 }}>
-      <Code size={25}>{`opentide validate --strict && opentide lint --strict`}</Code>
-    </div>
-    <div style={{ marginTop: 26 }}>
-      <Note>
-        Three of those four are caught mechanically, in about a second. The fourth is yours, and it
-        is the same hand-over gate the lifecycle diagram calls ACCEPTANCE.
-      </Note>
-    </div>
-  </Shell>
-);
-
-const DividerShip: Page = () => (
-  <Divider
-    number="04"
-    minutes="20 min"
-    title="Validate & ship"
-    subtitle="The loop you will run a hundred times: validate, lint, dry-run, deploy."
-  />
-);
-
-// The diagram carries its own title and legend, so this page gives it the whole
-// canvas rather than repeating the heading in a Shell. One caption names the
-// review gate, because the drawing shows ACCEPTANCE without saying who signs it.
-const DividerDocument: Page = () => (
-  <Divider
-    number="05"
-    minutes="5 min"
-    title="Document"
-    subtitle="Wiki pages and coverage diagrams, generated from the objects you just wrote."
-  />
-);
-
-const DividerShare: Page = () => (
-  <Divider
-    number="06"
-    minutes="5 min"
-    title="Share"
-    subtitle="Publish objects to a MISP destination — one Event per object."
-  />
-);
-
-const DividerWrapUp: Page = () => (
-  <Divider
-    number="07"
-    minutes="5 min"
-    title="Wrap-up"
-    subtitle="What bites, what to take home, and where to go next."
-  />
-);
-
-const Validate: Page = () => (
-  <Shell eyebrow="04 · SHIP" title="Validate and lint — strict in CI">
-    <Code label="shell" size={26}>{`opentide validate            # schema, UUID uniqueness, cross-object references
-opentide validate --strict   # warnings fail too — this is the CI gate
-opentide lint                # filenames and metadata
-opentide lint --fix          # rename files to slugify(name)
-opentide --json validate     # machine-readable report`}</Code>
-    <div style={{ marginTop: 40, display: 'flex', flexDirection: 'column', gap: 24 }}>
-      <Lede>
-        Exit 0 on success, 1 on failure. Filenames must equal{' '}
-        <code style={{ fontFamily: mono }}>slugify(name)</code>;{' '}
-        <code style={{ fontFamily: mono }}>metadata.author</code> and{' '}
-        <code style={{ fontFamily: mono }}>metadata.organisation</code> are lint warnings, not schema
-        errors.
-      </Lede>
-      <Note>
-        <code style={{ fontFamily: mono }}>opentide setup hooks</code> wires the same strict
-        validation into a pre-commit hook, pinned to this workspace.
-      </Note>
-    </div>
-  </Shell>
-);
-
-const BreakIt: Page = () => (
-  <Shell eyebrow="04 · SHIP" title="Break it on purpose">
-    <Code label="detection_model: 00000000-0000-4000-8002-DEADBEEF0000" size={25}>{`## objects/rules/sentinel-kql-rule.yaml
-  [error] detection_model: Unknown objective reference
-          '00000000-0000-4000-8002-DEADBEEF0000'
-
-$ echo $?
-1`}</Code>
-    <div style={{ marginTop: 40, display: 'flex', flexDirection: 'column', gap: 24 }}>
-      <Lede>
-        Issues print grouped by file. This one is a dangling reference, caught by the cross-object
-        check — understanding the output is half the job.
-      </Lede>
-      <Note>
-        The other anti-patterns to recognise: duplicate UUID, circular objective chain, and the
-        coverage island — a threat no objective covers.
-      </Note>
-    </div>
-  </Shell>
-);
-
-const QueryAndDeploy: Page = () => (
-  <Shell eyebrow="04 · SHIP" title="Check the query, then dry-run the deploy">
-    <Code label="shell" size={26}>{`$ opentide validate query --platform sentinel
-OK Offline KQL syntax validation passed for sentinel (1 query across 1 rule)
-
-$ opentide deploy --platform sentinel --dry-run
-== MDR Deployment ==
-OK Deployment completed`}</Code>
-    <div style={{ marginTop: 40, display: 'flex', flexDirection: 'column', gap: 24 }}>
-      <Lede>
-        The query check is offline and structural: unbalanced delimiters, broken pipelines, dangling
-        operators. It cannot tell you whether a table exists — add{' '}
-        <code style={{ fontFamily: mono }}>--live</code> for a real round-trip.
-      </Lede>
-      <Note>
-        A dry-run plans without touching the platform. With{' '}
-        <code style={{ fontFamily: mono }}>[[tenants]]</code> still commented out, it warns instead
-        of pretending.
-      </Note>
-    </div>
-  </Shell>
-);
-
-const Statuses: Page = () => (
-  <Shell eyebrow="04 · SHIP" title="Status decides what deploy does">
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 22 }}>
-      <StatusRow status="DESIGN" strategy="INERT" meaning="functional design only, never deployed" />
-      <StatusRow status="DEVELOPMENT" strategy="PREVIEW" meaning="under technical implementation" />
-      <StatusRow status="STAGING" strategy="PREVIEW" meaning="deployed for operational testing" />
-      <StatusRow status="ACCEPTANCE" strategy="PREVIEW" meaning="analyst validating alert + playbook" />
-      <StatusRow status="PRODUCTION" strategy="RELEASE" meaning="live production deployment" />
-      <StatusRow status="DISABLED" strategy="DISABLEMENT" meaning="present but inactive" />
-      <StatusRow status="REMOVED" strategy="DELETION" meaning="torn down from platforms" />
-    </div>
-    <div style={{ marginTop: 40 }}>
-      <Note>
-        Statuses are a configurable set in{' '}
-        <code style={{ fontFamily: mono }}>deployment.toml</code>, not a fixed lifecycle. There is no
-        promote command — edit the rule, run deploy.
-      </Note>
-    </div>
-  </Shell>
-);
-
-const Credentials: Page = () => (
-  <Shell eyebrow="04 · SHIP" title="The agent writes the config, never the secret">
-    <div style={{ display: 'flex', gap: 24 }}>
-      <div style={{ flex: 1 }}>
-        <Code label="platforms/splunk.toml — agent uncomments and fills" size={19}>{`[platform]
-enabled = true
-
-[[tenants]]
-name = "Default"
-deployment = "ALWAYS"
-
-[tenants.setup]
-url   = "$SPLUNK_URL"
-port  = "$SPLUNK_PORT"
-token = "$SPLUNK_TOKEN"
-app   = "$SPLUNK_APP"
-enterprise_security = true`}</Code>
-      </div>
-      <div style={{ flex: 1 }}>
-        <Code label="sharing.toml — agent writes it from scratch" size={19}>{`[[misp]]
-name = "workshop-misp"
-url = "https://misp.example.org"
-api_key = "\${MISP_API_KEY}"
-max_tlp = "amber"
-enabled = true
-object_types = ["threat", "objective"]
-publish = false`}</Code>
-      </div>
-    </div>
-    <div style={{ marginTop: 26, display: 'flex', flexDirection: 'column', gap: 20 }}>
-      <Lede>
-        <code style={{ fontFamily: mono }}>setup platforms --splunk</code> enables the platform but
-        leaves <code style={{ fontFamily: mono }}>[[tenants]]</code> commented out, and no setup
-        subcommand writes <code style={{ fontFamily: mono }}>sharing.toml</code> at all. Both gaps
-        are the agent's job.
-      </Lede>
-      <Note>
-        Watch the braces, because the two formats differ:{' '}
-        <code style={{ fontFamily: mono }}>$SPLUNK_TOKEN</code> in a platform file,{' '}
-        <code style={{ fontFamily: mono }}>{'${MISP_API_KEY}'}</code> in sharing. Neither file ever
-        holds the value — a literal MISP key is a warning and gets redacted.
-      </Note>
-    </div>
-  </Shell>
-);
-
-const EnvHandoff: Page = () => (
-  <Shell eyebrow="04 · SHIP" title="Your half: the tokens, in one git-ignored file">
-    <Code label=".env — git-ignored by setup env, never committed" size={22}>{`OPENTIDE_REPO_ROOT=.
-SPLUNK_URL=https://splunk.example.org
-SPLUNK_PORT=8089
-SPLUNK_TOKEN=eyJraWQiOiJzcGx1…
-SPLUNK_APP=SplunkEnterpriseSecuritySuite
-MISP_API_KEY=9f3cb21e…`}</Code>
-    <div style={{ marginTop: 24 }}>
-      <Code label="then hand it to the environment and check" size={22}>{`set -a; source .env; set +a
-
-opentide info --platform splunk     # the variables this platform expects
-opentide share targets              # the destinations that are enabled`}</Code>
-    </div>
-    <div style={{ marginTop: 24 }}>
-      <Note>
-        OpenTide reads the <em>environment</em>, not the file — nothing in the package loads{' '}
-        <code style={{ fontFamily: mono }}>.env</code> for you, so source it in the shell the agent
-        is using. In CI the same names come from pipeline secrets.
-      </Note>
-    </div>
-  </Shell>
-);
-
-const DocsAndCoverage: Page = () => (
-  <Shell eyebrow="05 · DOCUMENT" title="Documentation and coverage come for free">
-    <Code label="shell" size={26}>{`opentide generate docs     # wiki markdown for every object, with Mermaid chains
-opentide info rules        # the catalogue, tabulated
-opentide --json info --technique T1059 coverage`}</Code>
-    <div style={{ marginTop: 36 }}>
-      <Code label="output" size={25}>{`{ "coverage": { "technique": "T1059",
-                "rules": ["00000000-0000-4000-8003-000000000001"],
-                "count": 1 } }`}</Code>
-    </div>
-    <div style={{ marginTop: 36 }}>
-      <Note>
-        Coverage counts rules only. The objective and threat behind them are not listed — use the
-        generated Mermaid diagram to see the chain.
-      </Note>
-    </div>
-  </Shell>
-);
-
-const DocsOutput: Page = () => (
-  <Shell eyebrow="05 · DOCUMENT" title="What a generated page actually contains">
-    <Code size={26}>{`opentide generate docs --changed    # only objects the diff touched, plus their referrers
-opentide generate docs --flavor github --output docs`}</Code>
-    <div style={{ display: 'flex', gap: 36, marginTop: 36 }}>
-      <Card
-        kicker="RULES"
-        title="Status to platform block"
-        body="ATT&CK techniques, a backlink to the detection model, response, every platform configuration, coverage."
-      />
-      <Card
-        kicker="OBJECTIVES"
-        title="Signals and their rules"
-        body="Objective metadata, each signal, and the rules that cover it — backlinked in both directions."
-      />
-      <Card
-        kicker="THREATS"
-        title="Assessment and chaining"
-        body="Criticality, terrain, assessment, actors, CVE links to Vulnerability-Lookup, Mermaid chaining."
-      />
-    </div>
-    <div style={{ marginTop: 36 }}>
-      <Note>
-        Every family also gets a Metadata table and a References section. Flavours for GitHub,
-        GitLab, and Azure DevOps differ only in how the Mermaid and permalinks are written.
-      </Note>
-    </div>
-  </Shell>
-);
-
-// Swatches match the colours the Navigator layer actually writes.
-const LegendRow = ({
-  swatch,
-  label,
-  meaning,
-}: {
-  swatch: string;
-  label: string;
-  meaning: string;
-}) => (
-  <div
-    style={{
-      display: 'flex',
-      alignItems: 'center',
-      gap: 30,
-      border: `1px solid ${c.rule}`,
-      borderRadius: 'var(--osd-radius)',
-      background: c.panel,
-      padding: '22px 30px',
-    }}
-  >
-    <span
-      style={{
-        width: 56,
-        height: 56,
-        borderRadius: 10,
-        background: swatch,
-        border: `1px solid ${c.rule}`,
-        flexShrink: 0,
-      }}
-    />
-    <span
-      style={{
-        fontFamily: mono,
-        fontSize: 28,
-        fontWeight: 650,
-        width: 440,
-        flexShrink: 0,
-      }}
-    >
-      {label}
-    </span>
-    <span style={{ fontSize: 29, lineHeight: 1.4, color: c.muted }}>{meaning}</span>
-  </div>
-);
-
-const NavigatorLayerPage: Page = () => (
-  <Shell eyebrow="05 · DOCUMENT" title="Coverage as an ATT&CK Navigator layer">
-    <Code size={26}>{`opentide generate exports navigator   # layer 4.5, enterprise-attack, into .opentide/exports/`}</Code>
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 20, marginTop: 36 }}>
-      <LegendRow
-        swatch="#74c476"
-        label="Full Coverage"
-        meaning="a threat names the technique and a rule covers it"
-      />
-      <LegendRow
-        swatch="#fc6b6b"
-        label="TVM Only"
-        meaning="a threat names it, nothing detects it — your real gap"
-      />
-      <LegendRow
-        swatch="#6baed6"
-        label="MDR Only — needs checking"
-        meaning="a rule covers it with no threat behind it — why do we run this?"
-      />
-    </div>
-    <div style={{ marginTop: 36 }}>
-      <Note>
-        Each technique carries a comment listing the objects that put it there, prefixed{' '}
-        <code style={{ fontFamily: mono }}>[THREAT]</code> or{' '}
-        <code style={{ fontFamily: mono }}>[RULE]</code>. Drop the JSON into the Navigator and the
-        blue squares are the conversation worth having.
-      </Note>
-    </div>
-  </Shell>
-);
-
-const Explorer: Page = () => (
-  <Shell eyebrow="05 · DOCUMENT" title="The explorer: your catalogue as a static site">
-    <Code label="shell" size={25}>{`opentide generate explorer                        # not part of the default pipeline
-opentide setup ci github --explorer-pages --yes   # build it on GitHub Pages`}</Code>
-    <div style={{ marginTop: 32 }}>
-      <Code label=".opentide/exports/explorer.bundle.json" size={24}>{`models        threat · objective · signal · rule
-flatIndex     every object, keyed by UUID
-chaining      the threat-to-threat graph
-summaries     status · tlp · techniques · actors · platforms · relatedCount
-stagingIndex  what is deployed where`}</Code>
-    </div>
-    <div style={{ marginTop: 32 }}>
-      <Note>
-        A sibling <code style={{ fontFamily: mono }}>explorer.search.json</code> ships a prebuilt
-        search index, so the site needs no backend. Pages jobs are written for GitHub only — GitLab
-        and Azure exit 0 and warn.
-      </Note>
-    </div>
-  </Shell>
-);
-
-const WikiRulePage: Page = () => (
-  <Shell eyebrow="05 · DOCUMENT" title="A rule page, straight out of the repository">
-    <ImagePlaceholder
-      hint="Screenshot: generated rule wiki page — metadata table, status, ATT&CK techniques, detection-model backlink, platform configurations"
-      width={1700}
-      height={660}
-    />
-  </Shell>
-);
-
-const WikiThreatPage: Page = () => (
-  <Shell eyebrow="05 · DOCUMENT" title="A threat page, with the chain drawn for you">
-    <ImagePlaceholder
-      hint="Screenshot: generated threat wiki page — criticality, terrain, assessment, actors, and the Mermaid coverage or chaining diagram"
-      width={1700}
-      height={660}
-    />
-  </Shell>
-);
-
-const Share: Page = () => (
-  <Shell eyebrow="06 · SHARE" title="Publish to MISP, one Event per object">
-    <Code label="shell" size={25}>{`opentide share targets          # which destinations are enabled
-opentide share preview          # the push decision, no request, no ledger write
-opentide share push             # create or update one MISP Event per object
-opentide share push --changed   # only what the default-branch CI diff touched
-opentide share status           # local ledger vs the current object
-opentide share retract          # unpublish; --delete --yes removes it`}</Code>
-    <div style={{ marginTop: 36, display: 'flex', flexDirection: 'column', gap: 24 }}>
-      <Lede>
-        Sharing is not deployment. A destination is a MISP instance, not a detection platform, and
-        what was published is recorded in a ledger under{' '}
-        <code style={{ fontFamily: mono }}>.opentide/states/</code>.
-      </Lede>
-      <Note>
-        <code style={{ fontFamily: mono }}>max_tlp</code> on each block is a hard ceiling. API keys
-        are never printed, and a literal key in the config is a warning.{' '}
-        <code style={{ fontFamily: mono }}>--changed</code> only runs on a push to the default
-        branch in CI.
-      </Note>
-    </div>
-  </Shell>
-);
-
-const AgentGuardrails: Page = () => (
-  <Shell eyebrow="FIELD NOTES" title="The guardrails — leave them on">
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-      <ToolRow tool="deploy_rule → dry_run: true" what="a real deploy needs you to say so" />
-      <ToolRow tool="run_query → stub: true, rows: null" what="never contacts a tenant" />
-      <ToolRow tool="validate_query → live: false" what="refuses, and does not read your query" />
-      <ToolRow tool="crowdstrike · harfanglab" what="supported: false — never infer a pass" />
-      <ToolRow tool="no tool writes files" what="the agent edits YAML, so git shows everything" />
-    </div>
-    <div style={{ marginTop: 36 }}>
-      <Note>
-        An agent that could deploy quietly would be a liability, so the defaults all fail safe and
-        say why. The one to watch is{' '}
-        <code style={{ fontFamily: mono }}>dry_run: false</code> — if your agent reaches for it
-        without asking, that is the moment to stop and read.
-      </Note>
-    </div>
-  </Shell>
-);
-
-const Ci: Page = () => (
-  <Shell eyebrow="04 · SHIP" title="The generated pipeline is the same loop">
-    <ul style={{ margin: 0, paddingLeft: 44, marginTop: 10 }}>
-      <Bullet>
-        Validate job: <code style={{ fontFamily: mono }}>validate --strict</code> and{' '}
-        <code style={{ fontFamily: mono }}>lint --strict</code>
-      </Bullet>
-      <Bullet>One query-validation job per enabled, query-capable platform</Bullet>
-      <Bullet>Generate, then staging and production deploys on the default branch</Bullet>
-      <Bullet>
-        <code style={{ fontFamily: mono }}>OPENTIDE_REPO_ROOT</code> set at workflow scope; secrets
-        mapped by name
-      </Bullet>
-      <Bullet>GitHub, GitLab, and Azure pipelines from one command</Bullet>
-    </ul>
-    <div style={{ marginTop: 20 }}>
-      <Code size={26}>{`opentide setup platforms --sentinel --yes && opentide setup ci github --yes`}</Code>
-    </div>
-  </Shell>
-);
-
-const Gotchas: Page = () => (
-  <Shell eyebrow="FIELD NOTES" title="Five things that will bite you">
-    <ul style={{ margin: 0, paddingLeft: 44, marginTop: 10 }}>
-      <Bullet>
-        Prompting the agent before <code style={{ fontFamily: mono }}>setup mcp</code> — it has no
-        tools yet, so it guesses
-      </Bullet>
-      <Bullet>
-        Offline laptops: <code style={{ fontFamily: mono }}>setup skills</code> fetches the
-        catalogue from GitHub, even for bundled skills
-      </Bullet>
-      <Bullet>
-        Your shell and your agent on different{' '}
-        <code style={{ fontFamily: mono }}>OPENTIDE_REPO_ROOT</code> values
-      </Bullet>
-      <Bullet>
-        Braces differ: <code style={{ fontFamily: mono }}>{'${MISP_API_KEY}'}</code> in sharing.toml,{' '}
-        <code style={{ fontFamily: mono }}>$SPLUNK_TOKEN</code> in the platform TOML
-      </Bullet>
-      <Bullet>
-        <code style={{ fontFamily: mono }}>setup ci sentinel</code> — the positional is the CI
-        provider, not a platform
-      </Bullet>
-    </ul>
-  </Shell>
-);
-
-const CheatSheet: Page = () => (
-  <Shell eyebrow="TAKE THIS HOME" title="One block, then four prompts">
-    <Code label="you type this once" size={24}>{`pip install 'opentide[mcp]==0.12.1'
-opentide setup mcp --cursor --yes && opentide setup skills --cursor --yes`}</Code>
-    <div style={{ marginTop: 28 }}>
-      <Code label="then stop typing — this is the rest of the workshop" size={24}>{`"Scaffold a detection repo here: Sentinel and Splunk, CI on GitHub,
- hooks on. Show me the commands before you run them."
-
-"Here is an intel report. Draft the threat, the objective with its
- signals, and a Sentinel rule — then validate strict and fix what fails."
-
-"Add a Splunk block to that rule and dry-run the deploy."
-
-"Preview sharing the threat to MISP. Do not push yet."`}</Code>
-    </div>
     <div style={{ marginTop: 28 }}>
       <Note>
-        Keep <code style={{ fontFamily: mono }}>opentide validate --strict</code> in your own hands
-        between prompts. It is the one command that tells you whether the last answer was true.
+        Nobody writes these by hand, so nobody can forget to update them. On the Navigator layer the
+        red squares are your real gaps — and the blue ones are the rules nobody can justify yet.
       </Note>
     </div>
   </Shell>
-);
-
-const Close: Page = () => (
-  <div
-    style={{
-      ...fill,
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'center',
-      padding: '0 140px',
-    }}
-  >
-    <img src={logo} alt="OpenTide" style={{ width: 110, height: 110 }} />
-    <h2
-      style={{
-        fontFamily: 'var(--osd-font-display)',
-        fontSize: 104,
-        lineHeight: 1.05,
-        fontWeight: 900,
-        margin: '44px 0 0',
-      }}
-    >
-      Your turn
-    </h2>
-    <p style={{ fontSize: 40, lineHeight: 1.5, color: c.soft, margin: '32px 0 0', maxWidth: 1300 }}>
-      Scaffold a repository, author one chain, and get a green validate. Everything after that is
-      the same loop at a larger scale.
-    </p>
-    <div style={{ fontFamily: mono, fontSize: 28, color: c.muted, marginTop: 52, lineHeight: 1.7 }}>
-      opentide.org/docs/usage/ · tutorial + quickstart
-      <br />
-      github.com/OpenTideHQ/opentide · pypi.org/project/opentide<br />github.com/OpenTideHQ/library - opentide objects thta can be reused / shared
-    </div>
-    <Footer />
-  </div>
 );
 
 const ConclusionBox = ({
@@ -3431,9 +2036,7 @@ const ConclusionLT: Page = () => (
             marginTop: 'auto',
             paddingTop: 26,
           }}
-        >
-          Come to the workshop with your agent.
-        </div>
+        >Come to the workshop with your agent!</div>
       </ConclusionBox>
     </div>
 
@@ -3452,137 +2055,25 @@ const ConclusionLT: Page = () => (
   </Shell>
 );
 
-const DividerBackup: Page = () => (
-  <Divider
-    number="—"
-    minutes="backup"
-    title="Backup."
-    subtitle="Everything below is held back for questions: the full workshop material, unchanged."
-  />
-);
 
 export const meta: SlideMeta = {
   title: 'OpenTIDE — Open Threat-Informed Detection Engineering (hack.lu 2026)',
   createdAt: '2026-10-10T13:58:08.841Z',
 };
 
-// Original workshop notes, kept index-aligned with the old running order; the
-// exported `notes` below re-points them at the new one.
-const N: (string | undefined)[] = [
-  'Welcome. Housekeeping first: everyone needs Python 3.10 or newer and a terminal. By the end of the session you will have a detection repository that validates clean and a rule that is ready to deploy. Ask questions as we go — this is a workshop, not a talk.',
-  'Let this one sit in silence for a beat, then land the joke and move on — it buys you the attention you need for the three slides that follow.',
-  'Now the point behind the joke: OpenTIDE is where public detection content lands and becomes yours. Name each source as you point at it — SigmaHQ, the Microsoft Sentinel repo, Splunk ESCU, Rulezet, SOC Prime — then say the quiet part: importing rules is easy, keeping them tied to a threat you actually care about is the hard part, and that is what the next hour is about.',
-  'Frame OpenTide as a toolchain, not a platform. It does not store your detections — your Git repository does. OpenTide is what turns that repository into something you can validate, document, and ship. Three jobs: validate, generate, deploy.',
-  'Read out the new time budget so nobody is surprised: 10 to bootstrap, 10 to configure, 20 on TI to rule, 20 to validate and ship, then 5 each for document, share and wrap-up. Say the shape of the day out loud — they type commands once, in step 01, and after that they prompt and review. The deliverable is still theirs: a repository that validates clean, a rule ready to deploy, and a pipeline that enforces both.',
-  'Draw the red curve with your hand as you talk: the analyst spends weeks on a campaign and their understanding goes deep. Then the hand-over: a PDF, a wiki page, a deck. Ask the detection engineers in the room how much of that depth survives the document. The blue curve starts low and climbs slower, because relearning from prose is harder than learning from the source. Most teams never get back to the red level — and nobody notices, because the loss is invisible.',
-  'Same picture, but now the hand-over is a list of technique IDs. Point at the chips: T1059 tells you "command interpreter". It does not tell you which interpreter, which parent process, which flags, or why this actor is worth detecting. Then walk to the six-month mark: the engineer who wrote the rule has moved on, the procedure is forgotten, and the curve turns down. Ask whether anyone has inherited a rule nobody could explain. Every room has that story.',
-  'Now the payoff. One line, no break. The shift is organisational as much as technical: a purple team documents the threat once, as a structured object, and the rule carries the UUID of the objective that justified it. The knowledge lives in the repository, not in a person. Six months later the chain still answers "why does this rule exist?" — which is the question the previous two slides could not answer.',
-  'Three questions, three object families. Insist on the acronyms only lightly — the questions are what matter. Mention that the UUID, not the filename, is the identity, which is why renaming is safe.',
-  'This is the slide to spend time on. Read it left to right first — a threat is covered by an objective, which is implemented by a rule — then point at the blue labels underneath and explain that the YAML reference runs the opposite way: the rule names the objective, the objective names the threat. People who grasp this one picture stop guessing which field goes where. Then show the two commands live if the room has a repo with content.',
-  'Seven platforms, one wheel. The honest bit is worth calling out: CrowdStrike and HarfangLab cannot validate queries, and OpenTide reports that rather than faking a pass. Ask which platforms are in the room.',
-  'Draw the rings from the inside out with your hand. Start with the smallest: a team that only documents threat vectors already gets something useful — a structured library instead of a wiki page. Add objectives and coverage becomes measurable. Only the outer ring manages the rules that ship. The point to land is that you do not have to reach the outer ring to get value, which is the honest answer to "this looks like a lot of process for my team". Then zoom into one objective box and spend your time there: the objective is not the unit a rule implements. It decomposes into signals — the pieces of evidence that would satisfy it — and each rule points at one signal. That is why a gap here is actionable: you are not told "this objective is weak", you are told which signal nobody has implemented yet. Mention that detection_model will also accept an objective UUID, and that naming the signal is the better habit. Then point at the three hollow squares on the lower right and be honest about them: detection_model is optional, so a rule with nothing behind it still validates and still deploys. Most rooms are importing a few hundred of these from a vendor pack, and the answer is not that OpenTide refuses them — it manages them and makes them visible, which is the first step to giving them a parent. This is the same rule that shows up blue on the Navigator layer later.',
-  'Housekeeping, and do not rush it: everything today assumes a working agent, so read the left column out loud and ask for hands on each line. Python 3.10 or newer, git, a GitHub account, and an agent in their editor — Cursor, Claude Code, Copilot, any MCP host. The right column is on us: MISP URL and key, Splunk URL and token, and the intel report we will author from. Nobody needs a cloud subscription or a Sentinel tenant. The one failure mode worth pre-empting is a locked-down laptop: setup skills pulls the catalogue from github.com, so if outbound HTTPS is blocked the skills step fails and the rest of the day is manual. Ask now whether anyone is on a managed device.',
-  'Section break. Everyone opens a terminal now. This is the only section where they type commands, so nobody moves on until install works — pair up the stragglers rather than letting them fall behind.',
-  'Walk the block line by line. Virtual environment first, then the mcp extra — that is what makes opentide mcp start work at all. The splunk extra is only for the live deploy later; validate, generate and dry-run need nothing. Then the two setup commands, and have them swap --cursor for their own editor. The last step is the one people forget: reload the MCP server in the host, or the agent starts with no tools. Land the point in the note: this block is manual because the agent cannot write the config that gives it tools. That is the bootstrap paradox, and after this slide they stop typing commands and start writing prompts.',
-  'Have the room ask their agent what OpenTide tools it can see, and compare against this list — that is the fastest proof the handshake worked. Read a few tools out, then spend your time on the note, because it is the honest part: no tool writes a file, and no tool runs setup. The agent authors YAML with its own editor and shells out to the CLI. That is deliberate — it means every single thing the agent does today shows up in git diff, and they can review it like a colleague\\\\\\\'s pull request rather than trusting a black box.',
-  'The two-roots failure costs people twenty minutes and it always looks like a bug in OpenTide. Their shell has one OPENTIDE_REPO_ROOT and the MCP server\\\\\\\'s env block has another, so the agent cheerfully reports a clean catalogue they cannot find. Have everyone ask the agent to run opentide info, then run it themselves, and compare the object counts. If the numbers differ, fix it now.',
-  'Section break, and a change of mode: from here the agent drives and they review. Say that explicitly, because the instinct is to keep typing.',
-  'This is the slide the workshop turns on. The agent should interview them before it writes anything, and these are the real option sets — the values the flags actually accept, not a wish list. Go round the room on the CI question so people hear the three choices. For today: GitHub, Sentinel plus Splunk, and whichever editor they bootstrapped. Worth saying why the interview matters: an agent that guesses here writes a pipeline for the wrong provider and a platform file nobody asked for, and they will not notice until CI goes red.',
-  'Make them read the commands before approving. Two things to point at. First, order: setup ci reads the enabled platform files to decide which query-validation jobs to write, so platforms must come first — get this wrong and the pipeline silently skips the query check. Second, --yes is on every line because an agent that hits an interactive prompt just hangs. That means the prompt is no longer the safety net; they are. This is the habit to take home.',
-  'Orient people in the tree the agent just created. Everything OpenTide owns lives under .opentide, the skills live under .agents/skills, and the content is plain YAML under objects. Then the configuration point: layered defaults mean they only ever edit their own workspace, and only the keys they care about.',
-  'Section break, and the part people came for. Twenty minutes, and the only input is a paragraph of prose.',
-  'Explain why generate comes first: validation compares objects against generated schemas, so without this step there is nothing to validate against. All four authoring skills open this way, which is why the agent does it unprompted. If anyone\\\\\\\'s agent skipped it, the schema resource literally answers back run \\\\\\\'opentide generate schemas\\\\\\\'.',
-  'Read the snippet out loud — it is deliberately ordinary. No IOC table, no STIX, just the kind of paragraph that lands in a SOC inbox. Then be straight with the room about what is happening, because it is the most common misunderstanding of the day: there is no TI import command in OpenTide. Nothing parses this. The agent reads prose and drafts objects using the shape rules in its skills, and OpenTide\\\\\\\'s job is to check the result. If you oversell this as a feature, the first person who tries it on a 40-page report will be disappointed.',
-  'Three skills, three objects, in this order, because each one needs the UUID of the one before it. Point at the skill names — these are the files setup skills installed, and each is a shape contract rather than a prompt: where the file goes, which fields are required, what command proves it worked. Stress that the agent mints fresh UUIDs; if you see the ones from these slides in their repo, the agent copied the deck instead of generating.',
-  'Give them a moment to find the two references, then say it plainly: an objective naming its threats, and a rule naming the one signal it implements. Everything else on these three files is description. If they remember one picture from today, this is the one — and it is the same chain from the model section, now written by an agent in about a minute.',
-  'Same objective, same signal, two dialects. Ask the agent for the Splunk block and it writes SPL beside the KQL without touching the model. This is also where their Splunk token becomes useful, so flag that the deploy section will come back to it.',
-  'Slow down here — this is the slide that keeps them safe. Four failure modes. The invented vocabulary value is by far the commonest, and it reads beautifully, which is exactly why it is dangerous. Three of the four are caught mechanically in about a second by validate --strict and lint --strict. The fourth — a query that parses perfectly and detects the wrong thing — no tool will ever catch, and that is their job. Tie it forward: this is the same ACCEPTANCE gate the lifecycle diagram shows in a few slides.',
-  'Section break. Everyone should now have three files. Quick show of hands before moving on.',
-  'Run validate live. Then explain the strict flag as the CI contract: warnings are errors when a pipeline is the reviewer.',
-  'This is the most valuable five minutes of the workshop. Have everyone corrupt the UUID and read the error together, then fix it. People who have seen the failure output once debug ten times faster.',
-  'Offline versus live is an important distinction — structural check, not a semantic one. Then dry-run the deploy and read the warning about commented-out tenants.',
-  'Statuses are configurable; do not let anyone leave thinking this is a fixed lifecycle. The no-promote-command point surprises people: you edit YAML, then deploy.',
-  'They have just read the status table, so introduce this as the same eight boxes drawn as a flow. Trace the path with your finger: a signal leaves the backlog, gets a DESIGN, becomes a rule in DEVELOPMENT, runs in STAGING against real data. Then stop at ACCEPTANCE and make the point of the slide: this is a hand-over gate, not a build step. The alert handling manager reviews the rule and decides whether it is something their team can actually work at three in the morning — fidelity, severity, the response block. Ready means PRODUCTION; needs rework sends it back through IMPROVING. Tie it to the previous slide: every box here is a status that ships in deployment.toml, and each one already maps to a deploy strategy — DESIGN inert, the middle band previewing, PRODUCTION releasing, DISABLED and REMOVED tearing down. What is organisation-specific is the colour, not the boxes: which team develops, which team operates, and who owns the ACCEPTANCE review. Swap those names for your own and the shape holds.',
-  'Two files, and the agent writes both — but for different reasons, so say both. setup platforms --splunk turns the platform on and then leaves the whole [[tenants]] block commented out, so somebody has to uncomment it and fill the four placeholders. sharing.toml is worse: there is no setup subcommand for it at all, so the agent writes that file from nothing. That is a genuinely good use of an agent — tedious, shape-driven, and easy to verify. Then the detail that costs people the most time today: the two formats disagree about braces. A platform file wants $SPLUNK_TOKEN, sharing wants ${MISP_API_KEY}. Ask the room to read both blocks and spot it. Last point: neither file ever contains a secret, and if the agent inlines a literal MISP key, OpenTide warns and redacts it rather than trusting you to notice.',
-  'This is the one moment in the whole section where they type something, so make it feel small: four values and a token, into a file git already ignores. Walk the second block carefully, because it is the honest caveat — nothing in OpenTide loads .env. There is no dotenv dependency; the config reads the process environment, so an unsourced .env looks exactly like a missing credential. Have them run set -a; source .env; set +a in the same shell the agent is driving, then opentide info --platform splunk and opentide share targets to prove both halves landed. Mention that unset placeholders fail loudly rather than deploying with a literal $SPLUNK_TOKEN, and that in CI these same names come from pipeline secrets instead.',
-  'Close the loop: the CI pipeline runs exactly the commands we just ran by hand. That is the whole promise of detection-as-code. This is the end of the 20-minute block — check the room before moving on.',
-  'Section break, and a short one: five minutes. Nobody types here, they just watch, because the documentation is already written — it falls out of the objects they authored twenty minutes ago.',
-  'Documentation is a side effect of validated content, which is the whole argument for detection-as-code. Run generate docs and open one page if you have a projector.',
-  'Scroll one rule page and one threat page so people see the backlinks and the Mermaid diagram. The line to land: nobody wrote this page, and nobody can forget to update it.',
-  'Walk the rule page top to bottom: metadata, status, techniques, then the backlink to the objective. Point out that the platform configuration block on the page is the same YAML they wrote twenty minutes ago — rendered, not retyped.',
-  'The threat page is the one that sells it to a manager. The chaining diagram was never drawn by hand; it comes from the UUID references. Ask the room how long a diagram like this normally stays accurate in their wiki.',
-  'Spend your time on the legend, not the command. Green is what everyone wants to show a board. Red is the honest gap — a threat you documented and never detected. Blue is the uncomfortable one: a rule running in production with no threat behind it. Nobody builds that view by hand, which is why nobody has it.',
-  'Flag that explorer is not in the default generate pipeline — you call it explicitly, or let the Pages job call it. Then the point: one JSON bundle plus a prebuilt search index is enough for a browsable catalogue with no backend, no database, and no server to patch. Mention the GitHub-only caveat so the GitLab shops in the room are not surprised.',
-  'Section break. Five minutes, and mostly a demo — few rooms have a MISP instance to hand. Ask who is already sharing detection content and how.',
-  'Lead with the distinction, because people conflate the two: sharing publishes to MISP, deploying pushes to a detection platform. Then show preview rather than push — it makes the decision without a request, so it is safe on stage. Flag max_tlp as the control that keeps a TLP:AMBER object from leaving.',
-  'Last section. Five minutes, so keep it moving: the gotchas, the cheat sheet, and the hand-off.',
-  'Not bonus material any more — this is the slide that decides whether they can trust what they built today. Walk the defaults: deploy_rule is dry-run unless someone says otherwise, run_query is an explicit stub that never contacts a tenant and never returns rows, validate_query refuses by default and does not even read the query string you hand it, and CrowdStrike and HarfangLab answer supported: false rather than faking a pass. The line to land: the defaults fail safe and say why. Then the warning — if their agent reaches for dry_run: false without asking, that is the moment to stop and read.',
-  'Read these out as war stories, not warnings — most of the room will have hit at least one in the last hour. The brace difference between ${MISP_API_KEY} in sharing.toml and $SPLUNK_TOKEN in the platform TOML is the one that wastes the most time, so say it twice.',
-  'Tell people to screenshot this page. One block they type, four prompts they paste, and the whole session is reproducible on Monday. The last line is the one that matters: keep validate --strict in their own hands between prompts, because it is the only command that tells them whether the last answer was true.',
-  'Hand over to practice time. Point at the docs for the tutorial and quickstart, and stay in the room for questions.',
-];
-
-// Index-aligned with the running order below. Reused pages keep their original
-// note via N[...]; new and reworked pages get fresh ones.
 export const notes: (string | undefined)[] = [
-  // ── the talk ──
   'Open on what the acronym actually stands for, then the provenance, because it is the credibility line: this is not a side project. OpenTIDE is built and run by the CSOC of the European Commission, and it has been open source since 2024 under the EUPL v1.2 — the EU public licence, GPL-compatible. Point at the two marks at the bottom: the institution, and the "united we cyberdefend" campaign it belongs to. Then set expectations for a lightning talk: no live demo, one idea, and a pile of backup slides if anyone wants depth.',
-  N[2],
+  'Now the point behind the joke: OpenTIDE is where public detection content lands and becomes yours. Name each source as you point at it — SigmaHQ, the Microsoft Sentinel repo, Splunk ESCU, Rulezet, SOC Prime — then say the quiet part: importing rules is easy, keeping them tied to a threat you actually care about is the hard part, and that is what the next hour is about.',
   'Same picture as the classic hand-over problem, but now the hand-over is a list of technique IDs. Walk the chips, then stop on T1190 and read the callout out loud. "Internet-facing application compromised" is a category, not a procedure: it does not say which application, which CVE, which request, which log source or which field. You cannot write a query from it, and you cannot tell whether you already cover it. Then the six-month mark: the engineer who wrote the rule has moved on, the procedure is forgotten, and the curve turns down. Ask whether anyone has inherited a rule nobody could explain. Every room has that story.',
-  N[7],
+  'Now the payoff. One line, no break. The shift is organisational as much as technical: a purple team documents the threat once, as a structured object, and the rule carries the UUID of the objective that justified it. The knowledge lives in the repository, not in a person. Six months later the chain still answers "why does this rule exist?" — which is the question the previous two slides could not answer.',
   'The same three objects, now as the order you ask in. The point to land is the dependency: the objective needs the threat UUID, and the rule needs the objective signal. Ask for the rule first and the agent invents a parent, which is exactly the drift we just spent two slides complaining about. The schema pills matter for one reason only — rules are at 1.1 while threats and objectives are at 1.0, so pin the version you talk about.',
-  N[11],
+  'Draw the rings from the inside out with your hand. Start with the smallest: a team that only documents threat vectors already gets something useful — a structured library instead of a wiki page. Add objectives and coverage becomes measurable. Only the outer ring manages the rules that ship. The point to land is that you do not have to reach the outer ring to get value, which is the honest answer to "this looks like a lot of process for my team". Then zoom into one objective box and spend your time there: the objective is not the unit a rule implements. It decomposes into signals — the pieces of evidence that would satisfy it — and each rule points at one signal. That is why a gap here is actionable: you are not told "this objective is weak", you are told which signal nobody has implemented yet. Mention that detection_model will also accept an objective UUID, and that naming the signal is the better habit. Then point at the three hollow squares on the lower right and be honest about them: detection_model is optional, so a rule with nothing behind it still validates and still deploys. Most rooms are importing a few hundred of these from a vendor pack, and the answer is not that OpenTide refuses them — it manages them and makes them visible, which is the first step to giving them a parent. This is the same rule that shows up blue on the Navigator layer later.',
   'The whole stack on one slide — walk it top to bottom, one level at a time, and do not rush it. Level 1 is the chain we have been building all talk: threats, objectives, signals, rules. Level 2 is what that buys you operationally: because every rule arrives with a reason, its deployment can carry a status, and the status decides what deploy actually does — DESIGN inert, the middle band previewing, PRODUCTION releasing, DISABLED and REMOVED tearing down. IMPROVING is the dashed one: it is the rework loop back into PRODUCTION from the lifecycle diagram, not a forward step, and it is not in the default strategy table. Level 3 is where the rule lands: seven platforms bundled in the wheel, five of which opentide can query-check, with CrowdStrike and HarfangLab deploy-only — it says so rather than faking a pass. The three dashed boxes on the end are roadmap, not shipped: Elastic Security has an accepted RFC 0007, Sysdig with Falco is still draft RFC 0004, and Graylog is a community ask with nothing planned. Be explicit about that line so nobody leaves thinking they can target Elastic today.',
   'Chapter break, and a change of subject: from the model to why any of this is packaged the way it is. One line is enough — OpenTIDE ran in production for years as a git submodule, and it is now a versioned CLI on PyPI. The reason matters for the next two slides: a submodule cannot be pinned, cannot be installed by an agent, and cannot be checked in CI without copying glue around.',
   'The number slide, and the reason the project exists. Trace the blue curve with your hand: intel volume compounds — advisories, CVEs, campaigns, thousands a month. Then the dotted line: engineering throughput, almost flat, because every TTP costs hours of human work to read, model, write, tune and deploy. The hatched area between them is the gap, and it widens on its own. Land the honest framing: the bottleneck was never the strategy, it was capacity. Tens of production-ready rules a month against thousands of intel items is not a discipline problem, it is an arithmetic problem — which is why agents matter, and why the spec has to keep them aligned.',
   'And this is the answer to "so do you let the agent deploy?". Two zones, and the boundary is the whole argument. Everything in the blue zone is drafting and checking — MCP tools, skills, the CLI — and nothing in it deploys. The dashed box is the brief, then search for what exists, get_chaining for the graph, draft the YAML, and on the way back validation_report, validate query --live against the tenant, and a dry-run deploy. Fail goes straight back to editing, in red. The agent\'s output is a pull request and nothing more. Below the line every step is a human decision: review the diff, merge, STAGING on merge, approval, PRODUCTION. Close the talk\'s argument here — agents write the queries, the engine checks them, and a person still signs off.',
+  'The payoff slide for everything before it, and the one that tends to win over managers rather than engineers. Three columns, left to right. Docs: generate docs writes a markdown page for every threat, objective and rule, with Mermaid chain diagrams and backlinks in both directions — ask the room how long a hand-drawn diagram stays accurate in their wiki, because this one is derived, not drawn. Exports: the ATT&CK Navigator layer is the one to spend time on. Green is what everyone wants to screenshot, red is the honest gap — a threat you documented and never detected — and blue is the uncomfortable one, a rule running with no threat behind it. Nobody builds that blue view by hand, which is why nobody has it. The graph explorer is the same catalogue as a static site: a JSON bundle plus a prebuilt search index, no backend, no database to patch. Share: one MISP Event per object, and lead with preview because it makes the decision without sending a request, so it is safe to show live. Flag max_tlp as the control that stops a TLP:AMBER object leaving, and be precise about the distinction people conflate — sharing publishes to MISP, deploying pushes to a detection platform. Land the closing line: none of this is written by hand, so none of it can drift from what you actually run.',
   'Close here. Two things to leave them with. Left: opentide.org — hold the slide long enough for the room to actually scan the QR, and mention the library, because reusable objects are the fastest way to get value without authoring from scratch. Right: the workshop, Friday 23 October, 13:45 to 15:15, Vianden & Wiltz — ninety minutes, hands on, and the only prerequisite is a laptop with a coding agent already working. Say the invitation out loud: come with your agent. Then thank them and take questions.',
-  'Everything from here is backup. Jump to a slide if the question needs it, otherwise stop and take questions.',
-
-  // ── backup: the full workshop deck, unchanged ──
-  N[0],
-  N[1],
-  N[3],
-  N[4],
-  N[5],
-  N[12],
-  N[13],
-  N[14],
-  N[15],
-  N[16],
-  N[17],
-  N[18],
-  N[19],
-  N[20],
-  N[21],
-  N[22],
-  N[23],
-  N[24],
-  N[25],
-  N[26],
-  N[27],
-  N[28],
-  N[29],
-  N[30],
-  N[31],
-  N[32],
-  N[34],
-  N[35],
-  N[36],
-  N[37],
-  N[38],
-  N[39],
-  N[40],
-  N[41],
-  N[42],
-  N[43],
-  N[44],
-  N[45],
-  N[46],
-  N[47],
-  N[48],
-  N[49],
-  N[50],
 ];
 
 export default [
@@ -3597,51 +2088,6 @@ export default [
   DividerWhyNowLT, // 08 · opentide p17
   GapLT, // 09 · opentide p04
   AgentLoopLT, // 10 · opentide p28
-  ConclusionLT, // 11 · new: opentide.org + QR, workshop invite, thank you
-
-  // ── backup ──
-  DividerBackup,
-  Cover,
-  Flacon,
-  WhatIsIt,
-  Plan,
-  HandoverGap,
-  Prerequisites,
-  DividerInstall,
-  Bootstrap,
-  AgentSurface,
-  PointAtRepo,
-  DividerScaffold,
-  AgentInterview,
-  AgentRunsSetup,
-  Layout,
-  DividerAuthor,
-  GenerateFirst,
-  TiInput,
-  AgentToChain,
-  ChainYaml,
-  RuleConfig,
-  ReviewGate,
-  DividerShip,
-  Validate,
-  BreakIt,
-  QueryAndDeploy,
-  Statuses,
-  Credentials,
-  EnvHandoff,
-  Ci,
-  DividerDocument,
-  DocsAndCoverage,
-  DocsOutput,
-  WikiRulePage,
-  WikiThreatPage,
-  NavigatorLayerPage,
-  Explorer,
-  DividerShare,
-  Share,
-  DividerWrapUp,
-  AgentGuardrails,
-  Gotchas,
-  CheatSheet,
-  Close,
+  GeneratedArtefacts, // 11 · new: docs, navigator + explorer exports, MISP sharing
+  ConclusionLT, // 12 · new: opentide.org + QR, workshop invite, thank you
 ] satisfies Page[];
