@@ -1300,7 +1300,7 @@ const Q_COVER = [
   'schema: rule::1.1  status: STAGING  tlp: clear',
 ].join('   ') + '   ';
 const Q_SETUP = [
-  "pip install 'opentide==0.14.2'  opentide setup --yes --platform sentinel --ci github",
+  "pip install 'opentide==0.15.0'  opentide setup --yes --platform sentinel --ci github",
   'opentide setup mcp --claude-code --yes  opentide setup skills --yes --claude-code',
   'opentide setup hooks --yes  opentide generate  opentide validate --strict',
   '.mcp.json  CLAUDE.md  .claude/skills/opentide-detection-rule  .opentide/configurations/platforms/sentinel.toml',
@@ -1320,6 +1320,8 @@ const Q_SHIP = [
   'git switch -c detections/lsass-access  gh pr create --fill',
   'opentide validate --strict  opentide lint --strict  opentide validate query --platform sentinel --live',
   'opentide deploy --plan STAGING --skip-unconfigured  opentide deploy --plan PRODUCTION',
+  'opentide generate docs --changed  opentide generate exports navigator  opentide generate explorer',
+  'opentide share preview  opentide share targets  max_tlp  explorer.bundle.json  layer 4.5',
 ].join('   ') + '   ';
 const Q_PLAY = [
   'intel → threat → objective → rule  coverage gaps  port to splunk  fix validation',
@@ -1513,7 +1515,9 @@ const Cover: Page = () => (
     <div style={{ position: 'absolute', right: 120, top: 92, height: 62, display: 'flex', alignItems: 'center', gap: 14, fontFamily: MONO, fontSize: 20, color: C.muted }}>
       <span>workshop</span>
       <span style={{ color: C.dim }}>·</span>
-      <span>opentide 0.14.2</span>
+      <span>90 minutes</span>
+      <span style={{ color: C.dim }}>·</span>
+      <span>opentide 0.15.0</span>
     </div>
     <h1 style={{ position: 'absolute', left: 120, top: 208, margin: 0, fontFamily: DISPLAY, fontWeight: 800, fontSize: 'var(--osd-size-hero)', lineHeight: 0.98, letterSpacing: '-0.05em', color: INK }}>
       Detection engineering
@@ -1521,10 +1525,56 @@ const Cover: Page = () => (
       with a <span style={{ color: ACC }}>coding agent</span>.
     </h1>
     <p style={{ position: 'absolute', left: 120, top: 520, width: 1300, margin: 0, fontSize: 32, lineHeight: 1.45, color: C.muted, letterSpacing: '-0.01em' }}>
-      A hands-on opentide workshop: from an empty folder to a threat-aligned, validated detection in a pull request. You bring the
-      intent, the agent does the typing, the engine checks, you approve.
+      Ninety minutes, hands on: from an empty folder to your own operational detection platform, with one threat-aligned, validated
+      rule in a pull request. You bring the intent, the agent does the typing, the engine checks, you approve.
     </p>
   </Stage>
+);
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 00 · WHAT TO BRING — first content page, so the room can fix laptops early.
+// ─────────────────────────────────────────────────────────────────────────────
+const Bring: Page = () => (
+  <Frame chapter={['00', 'overview']} source="opentide.org/docs/usage/quickstart · workshop prerequisites">
+    <H>What to bring. Check it now.</H>
+    <Lead maxWidth={1560}>Everything runs on your laptop. The agent is the fast path, not the requirement.</Lead>
+    <div style={{ display: 'flex', gap: 56, marginTop: 36 }}>
+      <div style={{ width: 812, display: 'flex', flexDirection: 'column' }}>
+        <ColHead icon="check">required</ColHead>
+        <Expect first icon="python" cmd="a laptop where pip install is allowed">
+          Python 3.10 or later, and the rights to install packages.
+        </Expect>
+        <Expect icon="branch" cmd="branch · commit · pull request">
+          git, and enough familiarity to push a branch.
+        </Expect>
+        <Expect icon="editor" cmd="VS Code · Kiro · any schema-aware editor">
+          An IDE that reads JSON Schema, for YAML completion.
+        </Expect>
+        <Expect icon="globe" cmd="pypi.org · github.com · opentide.org">
+          Network egress. Test your proxy before the session.
+        </Expect>
+      </div>
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+        <ColHead icon="spark">bring it if you want the full loop</ColHead>
+        <Expect first icon="agent" cmd="MCP support is what wires the opentide tools in">
+          An agent: any harness, any model. Claude Code, Cursor, Codex, Kiro, VS Code with Copilot, Continue with a local model.
+        </Expect>
+        <Expect icon="user" cmd="github or gitlab · SaaS or self-managed">
+          A git account, to push a branch and watch CI run.
+        </Expect>
+        <Expect icon="lock" cmd="your tenant, never ours · a dry run needs nothing">
+          Platform or MISP credentials, for a real deploy.
+        </Expect>
+        <Expect icon="intel" cmd="otherwise we hand you one">
+          A threat report you actually care about.
+        </Expect>
+      </div>
+    </div>
+    <Note tag="no agent" style={{ marginTop: 'auto' }}>
+      The workshop still works. Every prompt in this deck maps to a CLI command and the slides show both, so you can type what the
+      agent would have typed. Or pair up with someone who brought one.
+    </Note>
+  </Frame>
 );
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -1609,13 +1659,10 @@ const Roles: Page = () => (
       <Role icon="agent" who="The agent" line="drafts and runs" items={['searches the catalogue before writing', 'drafts YAML from the templates', 'runs the CLI, fixes what the engine flags']} solid />
       <Role icon="engine" who="opentide" line="the spec and the gates" items={['ontology and taxonomy: schemas, vocabularies', 'validation, chaining, coverage', 'deploy plans, CI pipelines, docs']} />
     </div>
-    <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginTop: 64, flexWrap: 'wrap' }}>
-      <Label style={{ marginRight: 8 }}>bring</Label>
-      <Chip tone="accent">python 3.10+</Chip>
-      <Chip tone="accent">git + a GitHub repo</Chip>
-      <Chip tone="accent">an MCP-capable agent: Claude Code, Cursor, VS Code</Chip>
-      <Chip>optional: a Sentinel workspace</Chip>
-    </div>
+    <Note tag="no agent" style={{ marginTop: 'auto' }}>
+      You take the first two columns: you draft the YAML and run the CLI yourself. The third column does not change, and neither does
+      a single gate in it.
+    </Note>
   </Frame>
 );
 
@@ -1634,7 +1681,7 @@ const DividerSetup: Page = () => (
   />
 );
 
-const T_SETUP = `$ pip install 'opentide==0.14.2'
+const T_SETUP = `$ pip install 'opentide==0.15.0'
 $ opentide setup --yes --name "SOC Detections" \\
     --org "Example Corp" --platform sentinel --ci github
 OK Setup complete
@@ -1651,14 +1698,12 @@ $ opentide validate --strict
 OK Validation passed, but no detection objects were found`;
 
 const PromptSetup: Page = () => (
-  <Frame chapter={['01', 'set up']} source="opentide.org/docs/cli/setup · run against opentide 0.14.2">
+  <Frame chapter={['01', 'set up']} source="opentide.org/docs/cli/setup · run against opentide 0.15.0">
     <H>Let the agent scaffold the repo.</H>
     <div style={{ display: 'flex', gap: 48, marginTop: 40 }}>
       <div style={{ width: 760, display: 'flex', flexDirection: 'column', gap: 24 }}>
         <Prompt n="01" title="scaffold">
-          Install <M>opentide==0.14.2</M> in a virtualenv. In this empty folder, set up an opentide detection repository called "SOC
-          Detections" for Example Corp, with Microsoft Sentinel and GitHub Actions. Wire the opentide MCP server and skills for Claude
-          Code, add the pre-commit hook, then run <M>generate</M> and <M>validate --strict</M>. Use non-interactive flags.
+          Install <M>opentide==0.15.0</M>{' in a virtualenv.'}<br />{'Create an empty folder `Hacklu2026_ws` do `git init`and by using only opentide CLI in this empty folder,'}<br />{'- set up an opentide detection repository called "SOC Detections" for Example Corp.'}<br />{'- Configure Microsoft Sentinel and Splunk as platforms'}<br />{'and GitHub Actions.'}<br />{'- Wire the opentide MCP server and skills for Claude Code and G'}{''}eneric agent<br />{'add the pre-commit hook, then run '}<M>generate</M> and <M>validate --strict</M>. Use non-interactive flags.
         </Prompt>
         <Note tag="expect">
           The interactive wizard needs a terminal. Agents pass explicit flags and <M>--yes</M>; without them opentide fails fast instead
@@ -1684,7 +1729,7 @@ const TREE: [string, string][] = [
 ];
 
 const WhatYouGet: Page = () => (
-  <Frame chapter={['01', 'set up']} source="the tree opentide 0.14.2 writes for the prompt above">
+  <Frame chapter={['01', 'set up']} source="the tree opentide 0.15.0 writes for the prompt above">
     <H>What the agent just built.</H>
     <Lead>A repository the engine, the CI and the agent all read the same way.</Lead>
     <div style={{ marginTop: 34, display: 'flex', flexDirection: 'column' }}>
@@ -1768,9 +1813,7 @@ const HouseRules: Page = () => (
     <div style={{ display: 'flex', gap: 48, marginTop: 36 }}>
       <div style={{ width: 760, display: 'flex', flexDirection: 'column', gap: 22 }}>
         <Prompt n="03" title="house rules" size={25}>
-          Add a "Detection workflow" section to CLAUDE.md. Threats, then objectives, then rules. Never invent vocabulary values or UUIDs.
-          Nothing is done until <M>validate --strict</M> passes. Rules start in STAGING, deploys are dry-run only, and you never touch
-          credentials or promote to PRODUCTION.
+          Add a "Detection workflow" section to the relevant file: AGENTS.md or CLAUDE.md . Threats, then objectives, then rules. Never invent vocabulary values or UUIDs. Nothing is done until validate --strict passes. Rules start in STAGING<M>{''}</M>{' deploys are dry-run only, and you never touch credentials or promote to PRODUCTION.'}
         </Prompt>
         <Note tag="tip">
           <M>setup skills</M> also writes CLAUDE.md. Pass <M>--name</M> and <M>--org</M>, or the header falls back to the folder name.
@@ -1935,12 +1978,11 @@ configurations:
 
 const PromptRule: Page = () => (
   <Frame chapter={['02', 'spec first']} source="skill: opentide-detection-rule · opentide.org/docs/usage/tutorial">
-    <H>Then the rule, in STAGING.</H>
+    <H>Then the rule, in STAGING</H>
     <div style={{ display: 'flex', gap: 56, marginTop: 40 }}>
       <div style={{ width: 800, display: 'flex', flexDirection: 'column', gap: 24 }}>
         <Prompt n="06" title="rule">
-          Implement the "LSASS process access" signal as a Sentinel rule under <M>objects/rules/</M>, schema <M>rule::1.1</M>, status
-          STAGING. Set <M>detection_model</M> to the objective's UUID and take techniques from the threat. Schedule it hourly with a
+          Implement the "LSASS process access" signal as a Sentinel rule under <M>objects/rules/</M>, schema <M>rule::1.1</M>{', status STAGING Set '}<M>detection_model</M> to the objective's UUID and take techniques from the threat. Schedule it hourly with a
           two-hour lookback. Validate, then show me the dry-run deploy plan.
         </Prompt>
         <Note tag="expect">
@@ -2045,7 +2087,7 @@ const J_ISSUE = `{
 }`;
 
 const Failure: Page = () => (
-  <Frame chapter={['03', 'close the loop']} source="opentide --json validate · run against the tutorial repo, opentide 0.14.2">
+  <Frame chapter={['03', 'close the loop']} source="opentide --json validate · run against the tutorial repo, opentide 0.15.0">
     <H>When validation fails, the agent gets a fix list.</H>
     <div style={{ display: 'flex', gap: 40, marginTop: 40 }}>
       <CTerm title="two mistakes an agent makes · real output" parts={[{ lang: 'bash', code: T_FAIL }]} size={19} lh={1.5} style={{ width: 820, alignSelf: 'flex-start' }} />
@@ -2112,7 +2154,7 @@ WARNING sentinel has no tenants configured, so a
 real deploy would stop`;
 
 const DryRun: Page = () => (
-  <Frame chapter={['03', 'close the loop']} source="opentide.org/docs/cli/deploy · run against opentide 0.14.2">
+  <Frame chapter={['03', 'close the loop']} source="opentide.org/docs/cli/deploy · run against opentide 0.15.0">
     <H>Preview every deploy.</H>
     <div style={{ display: 'flex', gap: 56, marginTop: 40 }}>
       <div style={{ width: 860, display: 'flex', flexDirection: 'column', gap: 24 }}>
@@ -2125,7 +2167,7 @@ const DryRun: Page = () => (
         <ColHead icon="eye">what to expect</ColHead>
         <Expect first cmd='deploy_rule(uuid, platform="sentinel", dry_run=true)'>Through MCP it previews one rule at a time.</Expect>
         <Expect cmd="[[tenants]] · GitHub secrets">The plan names what is missing. Tenants and credentials are yours to add, never the agent's.</Expect>
-        <Expect cmd="pip install 'opentide[sentinel]==0.14.2'">
+        <Expect cmd="pip install 'opentide[sentinel]==0.15.0'">
           With credentials, <M>validate query --live</M> checks the catalogue queries against your workspace.
         </Expect>
       </div>
@@ -2232,7 +2274,7 @@ const Lane = ({ label, sub, children }: { label: string; sub: string; children: 
 );
 
 const CI: Page = () => (
-  <Frame chapter={['04', 'ship it']} source=".github/workflows/opentide.yml · written by opentide setup --ci github (0.14.2)">
+  <Frame chapter={['04', 'ship it']} source=".github/workflows/opentide.yml · written by opentide setup --ci github (0.15.0)">
     <H>CI runs the gates the agent already ran.</H>
     <Lead>Same engine, same version pin, no agent in the loop. A pass on the laptop is a pass in CI.</Lead>
     <div style={{ marginTop: 34 }}>
@@ -2261,6 +2303,45 @@ const CI: Page = () => (
       credentials come from GitHub secrets · --skip-unconfigured keeps a repo with no tenant green · put production behind a protected
       environment
     </span>
+  </Frame>
+);
+
+// Activity 10: the artefacts that fall out of the validated objects — markdown
+// docs, the explorer graph, the ATT&CK layer, and a MISP preview.
+const PromptArtefacts: Page = () => (
+  <Frame chapter={['04', 'ship it']} source="opentide.org/docs/cli/generate · opentide.org/docs/cli/share">
+    <H>Documentation nobody has to write.</H>
+    <Lead>
+      The markdown wiki, the explorer graph, the ATT&CK layer and the MISP event all fall out of the objects you just validated, so
+      none of them can drift from what you run.
+    </Lead>
+    <div style={{ display: 'flex', gap: 56, marginTop: 36 }}>
+      <div style={{ width: 800, display: 'flex', flexDirection: 'column', gap: 24 }}>
+        <Prompt n="10" title="artefacts" size={25}>
+          Generate the documentation and the exports for this repository, then preview what sharing to MISP would publish. Show me the
+          markdown page for our rule, the ATT&CK layer, and the share preview. Push nothing.
+        </Prompt>
+        <Note tag="watch for">
+          Sharing is not deployment: a destination is a MISP instance, not a platform. <M>max_tlp</M> is a hard ceiling per destination,
+          so a TLP:AMBER object cannot leave.
+        </Note>
+      </div>
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+        <ColHead icon="package">what gets generated</ColHead>
+        <Expect first icon="doc" cmd="opentide generate docs --changed">
+          A markdown page per threat, objective and rule, with Mermaid coverage and chaining diagrams, backlinked both ways.
+        </Expect>
+        <Expect icon="graph" cmd=".opentide/exports/explorer.bundle.json">
+          The whole catalogue as a graph you can browse, with a prebuilt search index and no backend to patch.
+        </Expect>
+        <Expect icon="layers" cmd="opentide generate exports navigator · layer 4.5">
+          An ATT&CK layer: green is full coverage, red a threat with no rule, blue a rule with no threat behind it.
+        </Expect>
+        <Expect icon="share" cmd="opentide share preview · sharing.toml">
+          One MISP Event per object. Preview makes the same decision as push, with no request and no ledger write.
+        </Expect>
+      </div>
+    </div>
   </Frame>
 );
 
@@ -2418,20 +2499,45 @@ const Lab = ({ n, title, mins, steps, done }: { n: string; title: string; mins: 
   </div>
 );
 
-const Labs: Page = () => (
-  <Frame chapter={['05', 'your playbook']} source="opentide.org/docs/usage/tutorial">
-    <H>Four labs. Ninety minutes.</H>
+// One stop on the running clock under the lab cards.
+const Clock = ({ at, what, last }: { at: string; what: string; last?: boolean }) => (
+  <span style={{ display: 'inline-flex', alignItems: 'center', gap: 20 }}>
+    <span style={{ display: 'inline-flex', alignItems: 'baseline', gap: 9 }}>
+      <span style={{ color: INK, fontWeight: 600 }}>{at}</span>
+      <span>{what}</span>
+    </span>
+    {!last && <span style={{ width: 18, height: 1.5, background: C.line2 }} />}
+  </span>
+);
+
+// The lab plan, shown twice: once in the overview so the room knows what the
+// session actually is, and again in chapter 05 when the labs start. One body,
+// so the two can never drift — only the chapter badge differs.
+const LabsBody = ({ chapter }: { chapter: [string, string] }) => (
+  <Frame chapter={chapter} source="opentide.org/docs/usage/tutorial">
+    <H>Four labs. Seventy-five minutes.</H>
     <Lead>Pair up: one person prompts, one person reviews. Swap at every lab.</Lead>
-    <div style={{ display: 'flex', gap: 24, marginTop: 40, flex: 1 }}>
-      <Lab n="01" title="Set up" mins="20 min" steps={['prompt 01: scaffold the repo', 'restart the agent, prompt 02', 'prompt 03: house rules']} done={<>validate --strict exits 0 and the agent lists the opentide tools</>} />
-      <Lab n="02" title="First chain" mins="35 min" steps={['pick an advisory', 'prompt 04: the threat', 'prompt 05: choose the signals', 'prompt 06: the rule']} done={<>a threat, an objective and a rule, linked by UUID, all green</>} />
-      <Lab n="03" title="Break it" mins="15 min" steps={["set an impact to 'Data Leak'", 'point detection_model at a UUID that does not exist', "prompt: 'fix the build'"]} done={<>green again, with no new UUIDs and no invented objects</>} />
-      <Lab n="04" title="Ship it" mins="20 min" steps={['prompt 07: coverage', 'prompt 08: preview the deploy', 'prompt 09: the pull request']} done={<>a pull request with the chain in its description, Validate job green</>} />
+    <div style={{ display: 'flex', gap: 24, marginTop: 36, flex: 1 }}>
+      <Lab n="01" title="Set up" mins="15 min" steps={['prompt 01: scaffold the repo', 'restart the agent, prompt 02', 'prompt 03: house rules']} done={<>validate --strict exits 0 and the agent lists the opentide tools</>} />
+      <Lab n="02" title="First chain" mins="30 min" steps={['pick an advisory', 'prompt 04: the threat', 'prompt 05: choose the signals', 'prompt 06: the rule']} done={<>a threat, an objective and a rule, linked by UUID, all green</>} />
+      <Lab n="03" title="Break it" mins="10 min" steps={["set an impact to 'Data Leak'", 'point detection_model at a UUID that does not exist', "prompt: 'fix the build'"]} done={<>green again, with no new UUIDs and no invented objects</>} />
+      <Lab n="04" title="Ship it" mins="20 min" steps={['prompt 07: coverage', 'prompt 08: preview the deploy', 'prompt 09: the pull request', 'prompt 10: the artefacts']} done={<>a pull request with the chain in its description, Validate job green</>} />
+    </div>
+    <div style={{ display: 'flex', alignItems: 'center', gap: 20, marginTop: 24, fontFamily: MONO, fontSize: 19, color: C.muted }}>
+      <span style={{ color: ACC, fontWeight: 600 }}>the clock</span>
+      <Clock at="00:00" what="set up" />
+      <Clock at="00:15" what="first chain" />
+      <Clock at="00:45" what="break it" />
+      <Clock at="00:55" what="ship it" />
+      <Clock at="01:15" what="debrief" last />
     </div>
   </Frame>
 );
 
-const T_START = `$ pip install 'opentide==0.14.2'
+const LabsPreview: Page = () => <LabsBody chapter={['00', 'overview']} />;
+const Labs: Page = () => <LabsBody chapter={['05', 'your playbook']} />;
+
+const T_START = `$ pip install 'opentide==0.15.0'
 $ opentide setup --yes --name "SOC Detections" \\
     --platform sentinel --ci github
 $ opentide setup mcp --claude-code --yes
@@ -2528,16 +2634,25 @@ export const notes: (string | undefined)[] = [
   // Cover
   `Welcome. This is a hands-on workshop: by the end, every pair has built one detection end to end with a coding agent.
 The split we will practise all session: you bring the intent, the agent does the typing, opentide checks, and you approve.
-Everything on the slides was run against opentide 0.14.2, the current release.`,
+Everything on the slides was run against opentide 0.15.0, the current release.`,
+  // Bring
+  `Do this slide before anything else, and tell the room to start fixing their laptop now rather than listening to me.
+Required, left column, and the first one is the real blocker: Python 3.10 or later on a machine where pip install actually works. Corporate laptops are where this workshop dies. Then git, an IDE that reads JSON Schema — VS Code, Kiro, anything schema-aware — and network egress to pypi.org, github.com and opentide.org. Ask out loud who is behind a proxy, and deal with it now.
+Right column is optional and it is where the "full loop" lives. An agent: any harness, any model, there is no house preference — Claude Code, Cursor, Codex, Kiro, VS Code with Copilot, Continue against a local model. MCP support is the thing that matters, because that is what wires the opentide tools in. A git account if they want to push a branch and watch CI. Credentials only if they want a real deploy or a real share, and make the point that a dry run needs nothing at all. And their own threat report, because lab two is much better with intel they care about — we have one ready for anyone without.
+Land the bottom note properly, because somebody always asks: you do not need an agent. Every prompt in this deck maps to a CLI command and the slides show both. Working by hand is slower to type and identical in result. Invite anyone without one to pair with a neighbour.`,
   // Agenda
   `Five things you leave with. A repo your agent scaffolded, the MCP server and skills wired in, one threat to objective to rule chain that passes the strict gate, a dry-run deploy and a pull request, and a set of prompts you can reuse.
 Five chapters: set up, spec first, close the loop, ship it, and your playbook with the labs.`,
+  // Labs preview
+  `Before anything else, show them the shape of the session, because this is what they came for. Seventy-five minutes of hands-on work in four labs: set up, the first chain, break it, ship it. Point at the clock and say the switch times out loud now, so nobody is surprised later: fifteen, forty-five, fifty-five, and we debrief at one hour fifteen.
+Two things to flag here. The "done when" line on each card is the contract, so a pair knows when to stop and move on. And the pairing: one person prompts, one reviews, and you swap every lab, so everybody drives at least twice.
+We come back to this exact slide before lab one. For now it is just the map — do not read the individual prompts, keep it to about a minute.`,
   // Roles
   `Three roles, and the workshop works because nobody does someone else's job.
 You own intent and judgment: the intel, the platform, which signals are worth building, and every approval.
 The agent drafts and runs: it searches before writing, drafts from templates, runs the CLI and fixes what the engine flags.
 opentide owns the spec: the ontology and taxonomy, schemas and vocabularies, validation, deploy plans and CI.
-Check your laptop: Python 3.10 or later, git, a GitHub repo, and an agent that speaks MCP. A Sentinel workspace is optional.`,
+Then the note at the bottom, which is the honest version for anyone without an agent: you absorb the middle column. You draft the YAML and run the commands yourself, and the right-hand column does not move an inch — same schemas, same gates, same exit codes. The agent changes who types, not what is checked.`,
   // Divider 01
   `Chapter one: set up. One prompt turns an empty folder into a repository the agent understands.`,
   // Prompt 01
@@ -2597,8 +2712,6 @@ Through MCP the agent previews one rule at a time with dry_run true.
 Tenants and credentials are yours to add, as GitHub secrets, never in the repo or the chat. With the sentinel extra and credentials, validate query --live checks the catalogue queries against your workspace.`,
   // Divider 04
   `Chapter four: ship it. The agent's output is a pull request. CI runs every gate again, and humans promote.`,
-  `Before the pull request, the shape of the whole journey. Trace it with your hand: a signal leaves the backlog, gets a DESIGN, becomes a rule in DEVELOPMENT, then runs in STAGING against real data. Stop at ACCEPTANCE and make the point of the slide — this is a hand-over gate, not a build step. The alert handling manager decides whether the rule is something their team can actually work at three in the morning: fidelity, severity, the response block. Ready means PRODUCTION; needs rework sends it back through IMPROVING. Then retirement, which is explicit: DISABLED, then REMOVED. No rule leaves silently.
-The colours are who owns the merge request, and that part is organisation-specific — this is how the European Commission CSOC splits it between CATCH and CSIRC. Tell the room to swap the team names for their own; the shape holds. Tie it to deployment.toml: every box here is a status, and each status already maps to a deploy strategy.`,
   // PR
   `Prompt 09: one chain, one pull request. Ask for a description a reviewer can act on: the intel, the chain with UUIDs, the signals you chose not to build, and the gate output.
 The pre-commit hook validates the commit itself, so a broken object never reaches the branch.`,
@@ -2606,6 +2719,14 @@ The pre-commit hook validates the commit itself, so a broken object never reache
   `This is the workflow opentide setup wrote for GitHub. On a pull request: validate and lint strictly, check queries live when credentials exist, generate, deploy to STAGING, and write inflight preview shards for reviewers.
 On merge to main: validate, generate, deploy to PRODUCTION with promotion as deployment.toml configures, and publish the docs.
 Same engine and the same version pin as the laptop, with no agent in the loop. Put production behind a protected environment so a human approves it.`,
+  // MDR lifecycle
+  `Zoom out from CI to the lifecycle a rule actually walks. Trace it with your hand: a signal leaves the backlog, gets a DESIGN, becomes a rule in DEVELOPMENT, then runs in STAGING against real data — that STAGING is exactly the deploy job you just saw. Stop at ACCEPTANCE and make the point of the slide — this is a hand-over gate, not a build step. The alert handling manager decides whether the rule is something their team can actually work at three in the morning: fidelity, severity, the response block. Ready means PRODUCTION; needs rework sends it back through IMPROVING. Then retirement, which is explicit: DISABLED, then REMOVED. No rule leaves silently.
+The colours are who owns the merge request, and that part is organisation-specific — this is how the European Commission CSOC splits it between CATCH and CSIRC. Tell the room to swap the team names for their own; the shape holds. Tie it to deployment.toml: every box here is a status, and each status already maps to a deploy strategy.`,
+  // Prompt 10 artefacts
+  `The last job in that merge lane was Document, so here is what Document actually produces. Make the point first: nobody writes any of this by hand, which is why none of it can drift from what you run.
+Four artefacts, all from the objects you validated in lab two. Markdown docs: a page per threat, objective and rule, with Mermaid coverage and chaining diagrams, backlinked both ways, in a GitHub, GitLab or Azure DevOps flavour. The explorer: the whole catalogue as a browsable graph plus a prebuilt search index, a static bundle with no backend to patch. The ATT&CK layer, version 4.5, and read the legend out loud because it is the useful part — green is full coverage, red is a threat you have modelled with no rule behind it, so a real gap, and blue is a rule with no threat, which is a rule nobody can justify yet. Then MISP.
+On sharing, be precise about the thing people conflate: sharing is not deployment. A destination is a MISP instance, not a detection platform. Lead with preview, because it makes the same decision as push without sending a request or writing the ledger, so it is safe to hand to an agent and safe to run live in front of a room. And max_tlp is the control: it is a hard ceiling per destination, so a TLP:AMBER object cannot leave.
+Prompt 10 is the stretch goal at the end of lab four. If the room is behind, show the slide and move on.`,
   // Guardrails
   `What the agent does, and what you keep. This list comes straight from the agentic setup guide.
 Let the agent search, draft, fix what the validator flags, preview deploys and open the pull request.
@@ -2618,8 +2739,10 @@ Keep real deploys and promotion, credentials and deployment plans, the call that
   `Prompt like a spec, not a wish. Name the objects and the order, give the intel and check the mapping, ask for signals first, end with the gate, one chain per pull request.
 And the don'ts: no rules without a threat, no vocabulary or UUIDs from memory, no done without the output, no real deploys, no credentials in the chat.`,
   // Labs
-  `Four labs, ninety minutes. Pair up: one person prompts, the other reviews, and you swap every lab.
-Lab one: set up, done when validate strict passes and the agent lists its tools. Lab two: the first chain, prompts four to six. Lab three: break a value and a reference on purpose and let the agent fix the build. Lab four: preview, then a pull request with a green Validate job.`,
+  `Four labs, seventy-five minutes. Pair up: one person prompts, the other reviews, and you swap every lab.
+Read the clock at the bottom out loud, because it is the only way the room stays together: set up at zero, the first chain at fifteen, break it at forty-five, ship it at fifty-five, and we debrief at one hour fifteen. Announce each switch yourself, and move pairs on even when they are not finished — a pair stuck in lab two will still get value from watching lab four.
+The budget is deliberate: the first chain gets thirty minutes because it is the only lab where judgment is the work. Set up and break it are mechanical, so they get fifteen and ten.
+Lab one: set up, done when validate strict passes and the agent lists its tools. Lab two: the first chain, prompts four to six. Lab three: break a value and a reference on purpose and let the agent fix the build. Lab four: preview, then a pull request with a green Validate job, and prompt ten for the artefacts if the pair has time.`,
   // Resources
   `To take home: the same five commands, then hand the keyboard to your agent. The tutorial, the agentic setup guide, the MCP tool reference and the skills catalogue are linked here. Scan for opentide.org.`,
   // Close
@@ -2630,7 +2753,9 @@ Thank you. Let's start lab one.`,
 export default [
   // 00 · opening
   Cover,
+  Bring,
   Agenda,
+  LabsPreview,
   Roles,
   // 01 · set up
   DividerSetup,
@@ -2652,9 +2777,10 @@ export default [
   DryRun,
   // 04 · ship it
   DividerShip,
-  MdrLifecycle,
   PromptPR,
   CI,
+  MdrLifecycle,
+  PromptArtefacts,
   Guardrails,
   // 05 · your playbook
   DividerPlay,
