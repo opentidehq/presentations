@@ -2569,7 +2569,7 @@ const Resources: Page = () => (
         <ELink icon="book" label="tutorial" value="opentide.org/docs/usage/tutorial" />
         <ELink icon="agent" label="agents" value="…/usage/workflows/agentic-setup" />
         <ELink icon="plug" label="mcp tools" value="opentide.org/docs/mcp/tools" />
-        <ELink icon="spark" label="skills" value="github.com/OpenTideHQ/skills" />
+        <ELink icon="spark" label="skills" value="github.com/opentidehq/skills" />
         <div style={{ display: 'flex', alignItems: 'flex-end', gap: 28, marginTop: 26, paddingTop: 26, borderTop: `1px solid ${C.line}` }}>
           <div style={{ padding: 16, background: '#FFFFFF', border: `1px solid ${C.line2}`, borderRadius: 16 }}>
             <img src={qrOpentide} alt="QR code: opentide.org" style={{ width: 200, height: 200, display: 'block' }} />
@@ -2606,7 +2606,7 @@ const Close: Page = () => (
       </p>
       <div style={{ display: 'flex', alignItems: 'center', gap: 40, marginTop: 30, fontFamily: MONO, fontSize: 23, color: INK }}>
         <ECloseLink icon="globe">opentide.org</ECloseLink>
-        <ECloseLink icon="branch">github.com/OpenTideHQ</ECloseLink>
+        <ECloseLink icon="branch">github.com/opentidehq</ECloseLink>
         <ECloseLink icon="terminal">pip install opentide</ECloseLink>
       </div>
     </div>

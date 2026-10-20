@@ -280,7 +280,7 @@ const Divider = ({
 // ─── Pages ────────────────────────────────────────────────────────────────────
 
 
-// Title page for hack.lu 2026: what OpenTIDE stands for, where it comes from,
+// Title page for hack.lu 2026: what opentide stands for, where it comes from,
 // and the licence it ships under.
 const TitleLT: Page = () => (
   <div
@@ -523,7 +523,7 @@ const FlaconSources: Page = () => (
           margin: '16px 0 0',
         }}
       >
-        OpenTIDE is a management and operational framework
+        opentide is a management and operational framework
       </h2>
     </div>
 
@@ -540,16 +540,16 @@ const FlaconSources: Page = () => (
     >
       <img
         src={flacon}
-        alt="An OpenTIDE perfume bottle"
+        alt="An opentide perfume bottle"
         style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
       />
       <svg
         viewBox="0 0 1920 1080"
         role="img"
-        aria-label="SigmaHQ, Microsoft Sentinel, Splunk ESCU, Rulezet and SOC Prime content flowing into OpenTIDE."
+        aria-label="SigmaHQ, Microsoft Sentinel, Splunk ESCU, Rulezet and SOC Prime content flowing into opentide."
         style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}
       >
-        <title>Public detection content flows into OpenTIDE</title>
+        <title>Public detection content flows into opentide</title>
         <ArrowIn x1={361} y1={279} x2={652} y2={444} head="651.5,444.3 622.5,442.7 635.3,420.1" />
         <ArrowIn x1={308} y1={551} x2={607} y2={583} head="607,582.6 579.7,592.8 582.5,567" />
         <ArrowIn x1={337} y1={829} x2={624} y2={733} head="623.5,733 603,753.6 594.8,729" />
@@ -732,18 +732,18 @@ const AttackOnly: Page = () => (
   </Shell>
 );
 
-const WithOpenTide: Page = () => (
-  <Shell eyebrow="WHY THIS EXISTS" title="With OpenTide: one curve, one chain">
-    <AxisFrame title="With OpenTide a single purple-team curve rises without a break: the threat is documented once and the rule stays linked to the attack vector.">
+const WithOpentide: Page = () => (
+  <Shell eyebrow="WHY THIS EXISTS" title="With opentide: one curve, one chain">
+    <AxisFrame title="With opentide a single purple-team curve rises without a break: the threat is documented once and the rule stays linked to the attack vector.">
       <line x1={130} y1={390} x2={1640} y2={70} stroke={c.pt} strokeWidth={6} />
       <circle cx={130} cy={390} r={9} fill={c.pt} />
       <circle cx={1640} cy={70} r={9} fill={c.pt} />
 
-      {/* the purple team, documenting in OpenTide */}
+      {/* the purple team, documenting in opentide */}
       <circle cx={885} cy={230} r={17} fill="var(--osd-bg)" stroke={c.pt} strokeWidth={6} />
       <circle cx={885} cy={230} r={6} fill={c.pt} />
       <text x={850} y={198} fill="var(--osd-text)" fontSize={28} fontWeight={650} textAnchor="end">
-        purple team documents the threat in OpenTide
+        purple team documents the threat in opentide
       </text>
       <text x={870} y={352} fill={c.muted} fontSize={23} fontFamily={mono} textAnchor="middle">
         threat → objective → rule, one UUID chain
@@ -981,7 +981,7 @@ const ThreeLayers: Page = () => (
 );
 
 // Nested adoption scopes, after the CoreTIDE "Use cases" diagram. Threat
-// vectors sit inside threats-and-objectives, which sits inside OpenTide
+// vectors sit inside threats-and-objectives, which sits inside opentide
 // alongside the managed rules that ship. Objectives decompose into signals and
 // a rule implements a signal, so each signal gets its own row and the rules it
 // covers sit on that row's band. Every coordinate is a real pixel on the
@@ -1069,11 +1069,11 @@ const UseCases: Page = () => (
     <svg
       viewBox="0 0 1700 510"
       role="img"
-      aria-label="OpenTide wraps three nested scopes: threat vectors on their own, threat vectors with the objectives that cover them, and managed detection rules. Each objective decomposes into named signals and most rules implement one signal, while three hollow rules have no signal behind them and are managed all the same."
+      aria-label="opentide wraps three nested scopes: threat vectors on their own, threat vectors with the objectives that cover them, and managed detection rules. Each objective decomposes into named signals and most rules implement one signal, while three hollow rules have no signal behind them and are managed all the same."
       style={{ width: '100%', height: 'auto', display: 'block' }}
     >
       <title>
-        Three adoption scopes inside OpenTide, with rules implementing signals and a few orphans
+        Three adoption scopes inside opentide, with rules implementing signals and a few orphans
       </title>
 
       {/* the engine wraps every scope */}
@@ -1088,7 +1088,7 @@ const UseCases: Page = () => (
         strokeWidth={3}
       />
       <text x={34} y={66} fill="var(--osd-accent)" fontSize={29} fontWeight={800}>
-        OpenTide
+        opentide
       </text>
 
       {/* scope 2 — threats and the objectives that cover them */}
@@ -1195,7 +1195,7 @@ const UseCases: Page = () => (
       <RuleDot x={1160} y={418} />
       <RuleDot x={1010} y={452} />
 
-      {/* no signal behind them, and OpenTide ships them anyway */}
+      {/* no signal behind them, and opentide ships them anyway */}
       <text x={1318} y={430} fill={c.muted} fontSize={17} fontFamily={mono}>
         no signal — still managed
       </text>
@@ -2027,11 +2027,11 @@ const ConclusionLT: Page = () => (
                 marginTop: 18,
               }}
             >
-              github.com/OpenTideHQ
+              github.com/opentidehq
               <br />
               pypi.org/project/opentide
               <br />
-              OpenTideHQ/library
+              opentidehq/library
             </div>
           </div>
         </div>
@@ -2043,7 +2043,7 @@ const ConclusionLT: Page = () => (
       <ConclusionBox kicker="WORKSHOP · HACK.LU 2026">
         <img
           src={workshopAgenda}
-          alt="hack.lu schedule entry: OpenTIDE Workshop, 23 October 2026, 13:45–15:15, Vianden & Wiltz"
+          alt="hack.lu schedule entry: opentide Workshop, 23 October 2026, 13:45–15:15, Vianden & Wiltz"
           style={{
             width: '100%',
             height: 'auto',
@@ -2084,13 +2084,13 @@ const ConclusionLT: Page = () => (
 
 
 export const meta: SlideMeta = {
-  title: 'OpenTIDE — Open Threat-Informed Detection Engineering (hack.lu 2026)',
+  title: 'opentide — Open Threat-Informed Detection Engineering (hack.lu 2026)',
   createdAt: '2026-10-10T13:58:08.841Z',
 };
 
 export const notes: (string | undefined)[] = [
-  'Open on what the acronym actually stands for, then the provenance, because it is the credibility line: this is not a side project. OpenTIDE is built and run by the CSOC of the European Commission, and it has been open source since 2024 under the EUPL v1.2 — the EU public licence, GPL-compatible. Point at the two marks at the bottom: the institution, and the "united we cyberdefend" campaign it belongs to. Then set expectations for a lightning talk: no live demo, one idea, and a pile of backup slides if anyone wants depth.',
-  'Now the point behind the joke: OpenTIDE is where public detection content lands and becomes yours. Name each source as you point at it — SigmaHQ, the Microsoft Sentinel repo, Splunk ESCU, Rulezet, SOC Prime — then say the quiet part: importing rules is easy, keeping them tied to a threat you actually care about is the hard part, and that is what the next hour is about.',
+  'Open on what the acronym actually stands for, then the provenance, because it is the credibility line: this is not a side project. opentide is built and run by the CSOC of the European Commission, and it has been open source since 2024 under the EUPL v1.2 — the EU public licence, GPL-compatible. Point at the two marks at the bottom: the institution, and the "united we cyberdefend" campaign it belongs to. Then set expectations for a lightning talk: no live demo, one idea, and a pile of backup slides if anyone wants depth.',
+  'Now the point behind the joke: opentide is where public detection content lands and becomes yours. Name each source as you point at it — SigmaHQ, the Microsoft Sentinel repo, Splunk ESCU, Rulezet, SOC Prime — then say the quiet part: importing rules is easy, keeping them tied to a threat you actually care about is the hard part, and that is what the next hour is about.',
   'Same picture as the classic hand-over problem, but now the hand-over is a list of technique IDs. Walk the chips, then stop on T1190 and read the callout out loud. "Internet-facing application compromised" is a category, not a procedure: it does not say which application, which CVE, which request, which log source or which field. You cannot write a query from it, and you cannot tell whether you already cover it. Then the six-month mark: the engineer who wrote the rule has moved on, the procedure is forgotten, and the curve turns down. Ask whether anyone has inherited a rule nobody could explain. Every room has that story.',
   'Now the payoff. One line, no break. The shift is organisational as much as technical: a purple team documents the threat once, as a structured object, and the rule carries the UUID of the objective that justified it. The knowledge lives in the repository, not in a person. Six months later the chain still answers "why does this rule exist?" — which is the question the previous two slides could not answer.',
   'The same three objects, now as the order you ask in. The point to land is the dependency: the objective needs the threat UUID, and the rule needs the objective signal. Ask for the rule first and the agent invents a parent, which is exactly the drift we just spent two slides complaining about. The schema pills matter for one reason only — rules are at 1.1 while threats and objectives are at 1.0, so pin the version you talk about.',
@@ -2105,10 +2105,10 @@ export const notes: (string | undefined)[] = [
 
 export default [
   // ── the talk ──
-  TitleLT, // 01 · new: what OpenTIDE is, who builds it, the licence
+  TitleLT, // 01 · new: what opentide is, who builds it, the licence
   FlaconSources, // 02 · was 03 · now titled, Rulezet + Prime Architect enlarged
   AttackOnly, // 03 · was 07 · now carries the T1190 example
-  WithOpenTide, // 04 · moved from backup (was 19): one curve, one chain
+  WithOpentide, // 04 · moved from backup (was 19): one curve, one chain
   ObjectModelLT, // 05 · opentide-workshop p10
   UseCases, // 06 · moved from 09
   ThreeLayers, // 07 · objects + status + platforms, three layers

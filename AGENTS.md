@@ -1,6 +1,6 @@
-# OpenTideHQ/presentations — Agent Guide
+# opentidehq/presentations — Agent Guide
 
-You are authoring **OpenTide slides** in this repo, with [open-slide](https://open-slide.dev). Every slide is arbitrary React code that you write. Decks live side by side under `slides/`; each one is self-contained.
+You are authoring **opentide slides** in this repo, with [open-slide](https://open-slide.dev). Every slide is arbitrary React code that you write. Decks live side by side under `slides/`; each one is self-contained.
 
 ## Hard rules
 
@@ -12,7 +12,7 @@ You are authoring **OpenTide slides** in this repo, with [open-slide](https://op
 
 ## Which skill to use
 
-- **Anything OpenTide** (every deck here) — read the `opentide-deck` skill first: brand register, messaging, where facts and real CLI output come from, which deck to copy components from, and the review/export loop. It sits on top of the open-slide skills below and wins on brand and content.
+- **Anything opentide** (every deck here) — read the `opentide-deck` skill first: brand register, messaging, where facts and real CLI output come from, which deck to copy components from, and the review/export loop. It sits on top of the open-slide skills below and wins on brand and content.
 - **Drafting a new deck** — use the `create-slide` skill. It walks through scoping questions, structure, and hand-off.
 - **Applying inspector comments** (`@slide-comment` markers in a page) — use the `apply-comments` skill.
 - **Creating or extracting a theme** — use the `create-theme` skill. Themes live as markdown under `themes/<id>.md` and are read by `create-slide` before authoring.

@@ -1,11 +1,11 @@
 ---
 name: opentide-deck
-description: House rules for OpenTide decks in this repo — brand register, messaging, how to source facts and real CLI output, which deck to copy components from, and how to review and export. Use whenever you create or edit any deck under slides/ in OpenTideHQ/presentations, together with create-slide (new decks) and slide-authoring (the technical how). Triggers on "opentide deck", "workshop", "talk", "slides about opentide", or any edit to slides/opentide*.
+description: House rules for opentide decks in this repo — brand register, messaging, how to source facts and real CLI output, which deck to copy components from, and how to review and export. Use whenever you create or edit any deck under slides/ in opentidehq/presentations, together with create-slide (new decks) and slide-authoring (the technical how). Triggers on "opentide deck", "workshop", "talk", "slides about opentide", or any edit to slides/opentide*.
 ---
 
-# OpenTide decks
+# opentide decks
 
-`create-slide` owns the workflow and `slide-authoring` owns the technical how. This skill adds what is specific to OpenTide decks. Where they disagree on brand or content, this skill wins.
+`create-slide` owns the workflow and `slide-authoring` owns the technical how. This skill adds what is specific to opentide decks. Where they disagree on brand or content, this skill wins.
 
 ## 1. Start from the theme and a sibling deck
 
@@ -35,7 +35,7 @@ description: House rules for OpenTide decks in this repo — brand register, mes
 - Every content page names its source in the `Footer` (`opentide.org/docs/...`, a repo path, an issue, or "run against opentide X.Y.Z").
 - Pin the opentide version the deck talks about and say it on the cover or footer. Check the latest with `curl -s https://pypi.org/pypi/opentide/json | jq -r .info.version`.
 - Terminal output, JSON and file trees must come from a real run: `pnpm lab` builds a throwaway detection repo in `.lab/soc` with that pinned version (`OPENTIDE_VERSION=… pnpm lab` to change it). Trim output, never invent it; label invented examples "illustrative".
-- Docs live at opentide.org and in the `OpenTideHQ/opentide` repo under `docs/`; skills in `OpenTideHQ/skills`; specs and RFCs in `OpenTideHQ/specifications`.
+- Docs live at opentide.org and in the `opentidehq/opentide` repo under `docs/`; skills in `opentidehq/skills`; specs and RFCs in `opentidehq/specifications`.
 
 ## 5. Review and export
 
