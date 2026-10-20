@@ -1,4 +1,4 @@
-# OpenTide presentations
+# opentide presentations
 
 Private decks and workshops for [opentide](https://opentide.org), built with [open-slide](https://open-slide.dev)
 (React pages on a 1920×1080 canvas). Every deck shares one theme, `opentide-coastal`: the opentide.org light
@@ -54,5 +54,5 @@ into edits.
 
 ## Access
 
-`OpenTideHQ/presentations` is private to the two OpenTideHQ owners. Exports in `exports/` are what we share
+`opentidehq/presentations` is private to the two opentidehq owners. Exports in `exports/` are what we share
 outside; PPTX exports stay out of git.

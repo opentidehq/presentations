@@ -1316,8 +1316,8 @@ const Q_WHAT = [
 const Q_WHYNOW = [
   "pip install 'opentide==0.11.0'  opentide setup --yes --platform sentinel --ci github",
   'opentide generate  opentide validate --strict  opentide lint --strict',
-  'opentide deploy --plan STAGING  from opentide import OpenTide  OpenTide.initialise()',
-  'OpenTide.Rules[uuid].deploy("sentinel")  git submodule deinit -f CoreTide',
+  'opentide deploy --plan STAGING  from opentide import Opentide  Opentide.initialise()',
+  'Opentide.Rules[uuid].deploy("sentinel")  git submodule deinit -f CoreTide',
 ].join('   ') + '   ';
 const Q_AGENTS = [
   'search(query="T1190")  get_chaining(uuid="f8817f95")  coverage(technique="T1003")',
@@ -1716,7 +1716,7 @@ const SpecStack: Page = () => (
           </>
         }
         line2="Taxonomy: 36 versioned vocabularies · fixtures · RFCs"
-        meta="OpenTideHQ/specifications"
+        meta="opentidehq/specifications"
       />
       <Connector label="spec markdown → Pydantic models → JSON Schema (generated, never edited)" />
       <Layer
@@ -1727,7 +1727,7 @@ const SpecStack: Page = () => (
         solid
         line1="One package: CLI, Python SDK, MCP server, 7 platform adapters"
         line2="Types and JSON Schema share one model, so they cannot drift"
-        meta="OpenTideHQ/opentide"
+        meta="opentidehq/opentide"
       />
       <Connector label="validates · generates · deploys · documents" />
       <Layer
@@ -2542,9 +2542,9 @@ const ThreeDoors: Page = () => (
           title="python"
           marks={[B_MARK_RULE]}
           size={21}
-          code={`from opentide import OpenTide
-OpenTide.initialise()
-rule = OpenTide.Rules["c8f282eb-…"]
+          code={`from opentide import Opentide
+Opentide.initialise()
+rule = Opentide.Rules["c8f282eb-…"]
 result = rule.validate()
 print(result.ok, result.errors)`}
         />
@@ -2642,7 +2642,7 @@ const BRel = ({ x, y, children }: { x: number; y: number; children: ReactNode })
 );
 
 const Ecosystem: Page = () => (
-  <Frame chapter={['02', 'what opentide is']} source="github.com/OpenTideHQ">
+  <Frame chapter={['02', 'what opentide is']} source="github.com/opentidehq">
     <H>Each repository has one job.</H>
     <div style={{ position: 'relative', width: 1680, height: 670, marginTop: 40 }}>
       <svg width={1680} height={670} viewBox="0 0 1680 670" aria-hidden style={{ position: 'absolute', left: 0, top: 0 }}>
@@ -2664,7 +2664,7 @@ const Ecosystem: Page = () => (
       <BSat x={1140} y={0} icon="graph" name="explorer" role="the UI" line="Browse threats, objectives, signals, rules, chains" meta="opentidehq.github.io/library" />
       <BSat x={0} y={500} icon="agent" name="skills" role="the agent brain" line="27 agent skills for detection engineering" meta="Claude Code · Cursor · Codex · Copilot · Kiro" />
       <BSat x={570} y={500} icon="branch" name="your detection repo" role="your content" line="Private objects, configurations and CI" meta="the source of truth, in git" />
-      <BSat x={1140} y={500} icon="globe" name="opentide.org" role="the docs" line="Usage, CLI, MCP, SDK, specs, blog" meta="OpenTideHQ/website" />
+      <BSat x={1140} y={500} icon="globe" name="opentide.org" role="the docs" line="Usage, CLI, MCP, SDK, specs, blog" meta="opentidehq/website" />
       <BSoon x={0} name="language-server" sub="Rust · KQL, SPL, Tide YAML" />
       <BSoon x={1250} name="vscode-extension" sub="VS Code · editor onboarding" />
       <div
@@ -2799,7 +2799,7 @@ const Heritage: Page = () => (
       <div style={{ flex: 1 }}>
         <Label style={{ marginBottom: 22 }}>years in production · CoreTide</Label>
         <CEvent date="2023 · Hack.lu" title="TIDeMEC, homegrown at the EC" body="A detection engineering platform built inside the European Commission CSOC." />
-        <CEvent date="2024 · FIRST TC Amsterdam" title="The first OpenTIDE project" body="CoreTIDE presented as the backbone of a family of tools." />
+        <CEvent date="2024 · FIRST TC Amsterdam" title="The first opentide project" body="CoreTIDE presented as the backbone of a family of tools." />
         <CEvent date="Feb 2025 · open source" title="CoreTide on GitHub, EUPL-1.2" body="Published after more than two years in production." />
         <CEvent date="Mar 2026 · FIRST CTI" title="AgenTide" body="6 agent pull requests, 30+ objects, about 15 minutes each." last />
       </div>
@@ -2836,7 +2836,7 @@ const CIssue = ({ id, date, title, quote, pain }: { id: string; date: string; ti
 );
 
 const Backlog: Page = () => (
-  <Frame chapter={['03', 'why we re-released it']} source="github.com/OpenTideHQ/CoreTide/issues · github.com/OpenTideHQ/InitTide/issues">
+  <Frame chapter={['03', 'why we re-released it']} source="github.com/opentidehq/CoreTide/issues · github.com/opentidehq/InitTide/issues">
     <H>Our own issue tracker made the case.</H>
     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 540px)', justifyContent: 'space-between', rowGap: 24, marginTop: 40 }}>
       <CIssue id="CoreTide#3" date="2025-04-03" title="Error when running file_name.py" quote="“Looks like commit 9ef7a58 introduced a new bug.” Client CI pulled the engine at run time." pain="upgrades not pinned" />
@@ -2868,10 +2868,10 @@ rule = DataTide.Models.mdr[uuid]
 DeployTide.mdr["sentinel"].deploy(...)`;
 const C_BEFORE_SH = `$ git submodule update --init --recursive
 $ python Orchestration/validate.py`;
-const C_AFTER_PY = `from opentide import OpenTide
+const C_AFTER_PY = `from opentide import Opentide
 
-OpenTide.initialise()
-rule = OpenTide.Rules[uuid]
+Opentide.initialise()
+rule = Opentide.Rules[uuid]
 rule.deploy("sentinel")`;
 const C_AFTER_SH = `$ pip install 'opentide==0.11.0'
 $ opentide validate --strict
@@ -2971,7 +2971,7 @@ const CErgo = ({ icon, dim, before, after, refs }: { icon: IconName; dim: string
 );
 
 const WhyCLI: Page = () => (
-  <Frame chapter={['03', 'why we re-released it']} source="issue and PR backlogs: OpenTideHQ/CoreTide, InitTide, opentide (#n = opentide)">
+  <Frame chapter={['03', 'why we re-released it']} source="issue and PR backlogs: opentidehq/CoreTide, InitTide, opentide (#n = opentide)">
     <H>One tool on your PATH, not scripts in your tree.</H>
     <Lead>Why a CLI and not just a library: ergonomics is where adoption lives, for people and for agents.</Lead>
     <div style={{ marginTop: 30 }}>
@@ -3021,7 +3021,7 @@ const CMove = ({ from, fromRole, to, toRole, coming }: { from: string; fromRole:
 );
 
 const Archived: Page = () => (
-  <Frame chapter={['03', 'why we re-released it']} source="github.com/OpenTideHQ · archived 9 September 2026">
+  <Frame chapter={['03', 'why we re-released it']} source="github.com/opentidehq · archived 9 September 2026">
     <H>Six repositories archived. One coherent stack.</H>
     <Lead>History stays. Pinned submodule SHAs keep resolving. New work goes into the package.</Lead>
     <div style={{ display: 'flex', flexDirection: 'column', gap: 14, marginTop: 36 }}>
@@ -3661,7 +3661,7 @@ const D_JSON_REFUSE = `{
 }`;
 
 const Honesty: Page = () => (
-  <Frame chapter={['04', 'agentic detection engineering']} source="opentide.org/docs/mcp · opentide.org/docs/cli/validate · OpenTideHQ/opentide #245, #456">
+  <Frame chapter={['04', 'agentic detection engineering']} source="opentide.org/docs/mcp · opentide.org/docs/cli/validate · opentidehq/opentide #245, #456">
     <H>Agents build on what the gates return.</H>
     <div style={{ display: 'flex', gap: 48, marginTop: 36 }}>
       {/* what each tool reports */}
@@ -3846,7 +3846,7 @@ const DBig = ({ value, label, sub, accent, children }: { value: ReactNode; label
 );
 
 const Dogfood: Page = () => (
-  <Frame chapter={['04', 'agentic detection engineering']} source="github.com/OpenTideHQ/opentide · pypi.org/project/opentide">
+  <Frame chapter={['04', 'agentic detection engineering']} source="github.com/opentidehq/opentide · pypi.org/project/opentide">
     <H>We build opentide the way we want detections built.</H>
     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', columnGap: 56, rowGap: 52, marginTop: 64 }}>
       <DBig value="163" label="issues closed since 0.1.0" sub="sep 9 → oct 8 · bugs, docs, setup, migration" />
@@ -4020,7 +4020,7 @@ const ELegendDot = ({ minor, label }: { minor?: boolean; label: string }) => (
 );
 
 const Velocity: Page = () => (
-  <Frame chapter={['05', 'what comes next']} source="pypi.org/project/opentide · github.com/OpenTideHQ/opentide/blob/development/CHANGELOG.md">
+  <Frame chapter={['05', 'what comes next']} source="pypi.org/project/opentide · github.com/opentidehq/opentide/blob/development/CHANGELOG.md">
     <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between' }}>
       <H>26 releases in four weeks.</H>
       <div style={{ display: 'flex', gap: 30, paddingBottom: 10, fontFamily: MONO, fontSize: 19, color: C.muted }}>
@@ -4127,7 +4127,7 @@ const ERoadRefs = ({ children }: { children: ReactNode }) => (
 );
 
 const Roadmap: Page = () => (
-  <Frame chapter={['05', 'what comes next']} source="github.com/OpenTideHQ/opentide/issues · github.com/OpenTideHQ/specifications/tree/main/rfcs">
+  <Frame chapter={['05', 'what comes next']} source="github.com/opentidehq/opentide/issues · github.com/opentidehq/specifications/tree/main/rfcs">
     <H>Where opentide goes next.</H>
     <div style={{ display: 'flex', gap: 40, marginTop: 46 }}>
       <ERoadCol icon="plug" name="Platforms">
@@ -4351,7 +4351,7 @@ const GetStarted: Page = () => (
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
         <ELink icon="globe" label="home" value="opentide.org" />
         <ELink icon="book" label="docs" value="opentide.org/docs/usage" />
-        <ELink icon="branch" label="source" value="github.com/OpenTideHQ" />
+        <ELink icon="branch" label="source" value="github.com/opentidehq" />
         <ELink icon="package" label="package" value="pypi.org/project/opentide" />
         <ELink icon="archive" label="from CoreTide" value="opentide.org/docs/usage/migration" />
         <div style={{ display: 'flex', alignItems: 'flex-end', gap: 28, marginTop: 26, paddingTop: 26, borderTop: `1px solid ${C.line}` }}>
@@ -4393,7 +4393,7 @@ const Close: Page = () => (
       </p>
       <div style={{ display: 'flex', alignItems: 'center', gap: 40, marginTop: 30, fontFamily: MONO, fontSize: 23, color: INK }}>
         <ECloseLink icon="globe">opentide.org</ECloseLink>
-        <ECloseLink icon="branch">github.com/OpenTideHQ</ECloseLink>
+        <ECloseLink icon="branch">github.com/opentidehq</ECloseLink>
         <ECloseLink icon="terminal">pip install opentide</ECloseLink>
       </div>
     </div>
@@ -4426,13 +4426,13 @@ The target is sub-hour from intel to staging, with a human approving every promo
 As opentide.org puts it: you choose how much runs with you, and how much runs on its own.`,
   `You can start today, in five commands, from an empty folder.
 Pin the engine with the MCP extra, scaffold a repo with a platform and CI, wire your agent to the MCP server, generate schemas and templates, then run the same strict gate your CI runs.
-The docs, the quickstart and the CoreTide migration guide are on opentide.org; the code is under OpenTideHQ on GitHub and the package is on PyPI.
+The docs, the quickstart and the CoreTide migration guide are on opentide.org; the code is under opentidehq on GitHub and the package is on PyPI.
 Scan the code for opentide.org.`,
   `Agents write the queries; that part is now cheap.
 What opentide adds is spec-driven detection engineering: an ontology and a taxonomy, threat alignment, quality gates, and speed you can maintain.
 It is open source under EUPL-1.2, and forever free.
 So: pip install opentide, point your agent at it, and open your first pull request this week.
-Issues, RFCs and pull requests are open at github.com/OpenTideHQ. Thank you.`,
+Issues, RFCs and pull requests are open at github.com/opentidehq. Thank you.`,
 ];
 
 Cover.transition = tideReveal;
