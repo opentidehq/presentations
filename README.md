@@ -9,7 +9,7 @@ register, white and Pantone Reflex Blue, Inter and JetBrains Mono, with the ASCI
 | Deck | Pages | What it is |
 | --- | --- | --- |
 | [`slides/opentide`](slides/opentide/index.tsx) | 39 | **The founding deck** (8 October 2026, opentide 0.11.0): what opentide is, why it matters, why the engine was re-released as a CLI for agentic detection engineering, and what comes next. Export: [`exports/opentide.pdf`](exports/opentide.pdf). |
-| [`slides/opentide-workshop`](slides/opentide-workshop/index.tsx) | 28 | **Workshop: detection engineering with a coding agent** (opentide 0.14.2). From an empty folder to a threat → objective → rule chain in a pull request: the prompts to type, what the agent does, what to expect, and four labs. Export: [`exports/opentide-workshop.pdf`](exports/opentide-workshop.pdf). |
+| [`slides/opentide-workshop`](slides/opentide-workshop/index.tsx) | 32 | **Workshop: detection engineering with a coding agent** (opentide 0.16.0). From an empty folder to a threat → objective → rule chain in a pull request: the prompts to type, what the agent does, what to expect, and four labs. Export: [`exports/opentide-workshop.pdf`](exports/opentide-workshop.pdf). |
 
 Every terminal window, JSON envelope and file tree in the workshop comes from a real run of the pinned
 version (`pnpm lab`). Speaker notes are on every page.
@@ -45,7 +45,7 @@ Useful commands:
 pnpm typecheck
 pnpm shots <deck-id>          # 1920×1080 PNG per page in .shots/<deck-id>/ (needs pnpm dev)
 pnpm export:pdf <deck-id>     # exports/<deck-id>.pdf (needs pnpm dev)
-pnpm lab                      # opentide 0.14.2 detection repo in .lab/soc, for real CLI output
+pnpm lab                      # opentide 0.16.0 detection repo in .lab/soc, for real CLI output
 pnpm build                    # static site in dist/
 ```
 

@@ -1300,7 +1300,7 @@ const Q_COVER = [
   'schema: rule::1.1  status: STAGING  tlp: clear',
 ].join('   ') + '   ';
 const Q_SETUP = [
-  "pip install 'opentide==0.15.0'  opentide setup --yes --platform sentinel --ci github",
+  "pip install 'opentide==0.16.0'  opentide setup --yes --platform sentinel --ci github",
   'opentide setup mcp --claude-code --yes  opentide setup skills --yes --claude-code',
   'opentide setup hooks --yes  opentide generate  opentide validate --strict',
   '.mcp.json  CLAUDE.md  .claude/skills/opentide-detection-rule  .opentide/configurations/platforms/sentinel.toml',
@@ -1517,7 +1517,7 @@ const Cover: Page = () => (
       <span style={{ color: C.dim }}>·</span>
       <span>90 minutes</span>
       <span style={{ color: C.dim }}>·</span>
-      <span>opentide 0.15.0</span>
+      <span>opentide 0.16.0</span>
     </div>
     <h1 style={{ position: 'absolute', left: 120, top: 208, margin: 0, fontFamily: DISPLAY, fontWeight: 800, fontSize: 'var(--osd-size-hero)', lineHeight: 0.98, letterSpacing: '-0.05em', color: INK }}>
       Detection engineering
@@ -1681,7 +1681,7 @@ const DividerSetup: Page = () => (
   />
 );
 
-const T_SETUP = `$ pip install 'opentide==0.15.0'
+const T_SETUP = `$ pip install 'opentide==0.16.0'
 $ opentide setup --yes --name "SOC Detections" \\
     --org "Example Corp" --platform sentinel --ci github
 OK Setup complete
@@ -1698,12 +1698,12 @@ $ opentide validate --strict
 OK Validation passed, but no detection objects were found`;
 
 const PromptSetup: Page = () => (
-  <Frame chapter={['01', 'set up']} source="opentide.org/docs/cli/setup · run against opentide 0.15.0">
+  <Frame chapter={['01', 'set up']} source="opentide.org/docs/cli/setup · run against opentide 0.16.0">
     <H>Let the agent scaffold the repo.</H>
     <div style={{ display: 'flex', gap: 48, marginTop: 40 }}>
       <div style={{ width: 760, display: 'flex', flexDirection: 'column', gap: 24 }}>
         <Prompt n="01" title="scaffold">
-          Install <M>opentide==0.15.0</M>{' in a virtualenv.'}<br />{'Create an empty folder `Hacklu2026_ws` do `git init`and by using only opentide CLI in this empty folder,'}<br />{'- set up an opentide detection repository called "SOC Detections" for Example Corp.'}<br />{'- Configure Microsoft Sentinel and Splunk as platforms'}<br />{'and GitHub Actions.'}<br />{'- Wire the opentide MCP server and skills for Claude Code and G'}{''}eneric agent<br />{'add the pre-commit hook, then run '}<M>generate</M> and <M>validate --strict</M>. Use non-interactive flags.
+          Install <M>opentide==0.16.0</M>{' in a virtualenv.'}<br />{'Create an empty folder `Hacklu2026_ws` do `git init`and by using only opentide CLI in this empty folder,'}<br />{'- set up an opentide detection repository called "SOC Detections" for Example Corp.'}<br />{'- Configure Microsoft Sentinel and Splunk as platforms'}<br />{'and GitHub Actions.'}<br />{'- Wire the opentide MCP server and skills for Claude Code and G'}{''}eneric agent<br />{'add the pre-commit hook, then run '}<M>generate</M> and <M>validate --strict</M>. Use non-interactive flags.
         </Prompt>
         <Note tag="expect">
           The interactive wizard needs a terminal. Agents pass explicit flags and <M>--yes</M>; without them opentide fails fast instead
@@ -1729,7 +1729,7 @@ const TREE: [string, string][] = [
 ];
 
 const WhatYouGet: Page = () => (
-  <Frame chapter={['01', 'set up']} source="the tree opentide 0.15.0 writes for the prompt above">
+  <Frame chapter={['01', 'set up']} source="the tree opentide 0.16.0 writes for the prompt above">
     <H>What the agent just built.</H>
     <Lead>A repository the engine, the CI and the agent all read the same way.</Lead>
     <div style={{ marginTop: 34, display: 'flex', flexDirection: 'column' }}>
@@ -2065,21 +2065,21 @@ const AgentLoop: Page = () => (
 );
 
 const T_FAIL = `$ opentide validate
-## objects/threats/simulated-actor.yaml
-  [error] simulated-actor.yaml:18: threat.impact:
-    Value 'Data Leak' is not a valid 'impact::1.0'
-    vocabulary entry (suggestion: Data Breach)
 ## objects/rules/sentinel-kql-rule.yaml
-  [error] sentinel-kql-rule.yaml:17: detection_model:
+  [error] objects/rules/sentinel-kql-rule.yaml:15: detection_model:
     Unknown objective or signal reference
     '00000000-0000-4000-8002-deadbeef0000'
+## objects/threats/simulated-actor.yaml
+  [error] objects/threats/simulated-actor.yaml:15: threat.impact:
+    Value 'Data Leak' is not a valid 'impact::1.0'
+    vocabulary entry (suggestion: Data Breach)
 FATAL: Validation failed          # exit 1`;
 
 const J_ISSUE = `{
   "code": "vocab_unknown",
   "severity": "error",
   "object_type": "threat",
-  "yaml_line": 17,
+  "yaml_line": 14,
   "field_path": ["threat", "impact"],
   "message": "Value 'Data Leak' is not a valid
               'impact::1.0' vocabulary entry",
@@ -2087,7 +2087,7 @@ const J_ISSUE = `{
 }`;
 
 const Failure: Page = () => (
-  <Frame chapter={['03', 'close the loop']} source="opentide --json validate · run against the tutorial repo, opentide 0.15.0">
+  <Frame chapter={['03', 'close the loop']} source="opentide --json validate · reproduced in a scratch repo, opentide 0.16.0">
     <H>When validation fails, the agent gets a fix list.</H>
     <div style={{ display: 'flex', gap: 40, marginTop: 40 }}>
       <CTerm title="two mistakes an agent makes · real output" parts={[{ lang: 'bash', code: T_FAIL }]} size={19} lh={1.5} style={{ width: 820, alignSelf: 'flex-start' }} />
@@ -2150,24 +2150,25 @@ const T_DRY = `$ opentide deploy --platform sentinel --dry-run
 OK Deployment completed
   advice: add (or uncomment) a [[tenants]] entry in
   .opentide/configurations/platforms/sentinel.toml
-WARNING sentinel has no tenants configured, so a
-real deploy would stop`;
+WARNING sentinel has no tenants configured in
+.opentide/configurations/platforms/sentinel.toml,
+so a real deploy would stop`;
 
 const DryRun: Page = () => (
-  <Frame chapter={['03', 'close the loop']} source="opentide.org/docs/cli/deploy · run against opentide 0.15.0">
+  <Frame chapter={['03', 'close the loop']} source="opentide.org/docs/cli/deploy · run against opentide 0.16.0">
     <H>Preview every deploy.</H>
     <div style={{ display: 'flex', gap: 56, marginTop: 40 }}>
       <div style={{ width: 860, display: 'flex', flexDirection: 'column', gap: 24 }}>
         <Prompt n="08" title="preview">
           Preview the Sentinel deployment for everything in STAGING. Do not deploy for real. Summarise what would change.
         </Prompt>
-        <CTerm title="fresh repo, no tenant yet · real output" parts={[{ lang: 'bash', code: T_DRY }]} size={19.5} lh={1.5} />
+        <CTerm title="one STAGING rule, no tenant yet · real output" parts={[{ lang: 'bash', code: T_DRY }]} size={19.5} lh={1.5} />
       </div>
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
         <ColHead icon="eye">what to expect</ColHead>
         <Expect first cmd='deploy_rule(uuid, platform="sentinel", dry_run=true)'>Through MCP it previews one rule at a time.</Expect>
         <Expect cmd="[[tenants]] · GitHub secrets">The plan names what is missing. Tenants and credentials are yours to add, never the agent's.</Expect>
-        <Expect cmd="pip install 'opentide[sentinel]==0.15.0'">
+        <Expect cmd="opentide validate query --platform sentinel --live">
           With credentials, <M>validate query --live</M> checks the catalogue queries against your workspace.
         </Expect>
       </div>
@@ -2274,7 +2275,7 @@ const Lane = ({ label, sub, children }: { label: string; sub: string; children: 
 );
 
 const CI: Page = () => (
-  <Frame chapter={['04', 'ship it']} source=".github/workflows/opentide.yml · written by opentide setup --ci github (0.15.0)">
+  <Frame chapter={['04', 'ship it']} source=".github/workflows/opentide.yml · written by opentide setup --ci github (0.16.0)">
     <H>CI runs the gates the agent already ran.</H>
     <Lead>Same engine, same version pin, no agent in the loop. A pass on the laptop is a pass in CI.</Lead>
     <div style={{ marginTop: 34 }}>
@@ -2300,8 +2301,8 @@ const CI: Page = () => (
       </div>
     </div>
     <span style={{ marginTop: 'auto', fontFamily: MONO, fontSize: 19, color: C.muted }}>
-      credentials come from GitHub secrets · --skip-unconfigured keeps a repo with no tenant green · put production behind a protected
-      environment
+      credentials come from GitHub secrets · tenant config is read from main, never from the pull request · --skip-unconfigured keeps a
+      repo with no tenant green · put production behind a protected environment
     </span>
   </Frame>
 );
@@ -2537,7 +2538,7 @@ const LabsBody = ({ chapter }: { chapter: [string, string] }) => (
 const LabsPreview: Page = () => <LabsBody chapter={['00', 'overview']} />;
 const Labs: Page = () => <LabsBody chapter={['05', 'your playbook']} />;
 
-const T_START = `$ pip install 'opentide==0.15.0'
+const T_START = `$ pip install 'opentide==0.16.0'
 $ opentide setup --yes --name "SOC Detections" \\
     --platform sentinel --ci github
 $ opentide setup mcp --claude-code --yes
@@ -2634,7 +2635,7 @@ export const notes: (string | undefined)[] = [
   // Cover
   `Welcome. This is a hands-on workshop: by the end, every pair has built one detection end to end with a coding agent.
 The split we will practise all session: you bring the intent, the agent does the typing, opentide checks, and you approve.
-Everything on the slides was run against opentide 0.15.0, the current release.`,
+Everything on the slides was run against opentide 0.16.0.`,
   // Bring
   `Do this slide before anything else, and tell the room to start fixing their laptop now rather than listening to me.
 Required, left column, and the first one is the real blocker: Python 3.10 or later on a machine where pip install actually works. Corporate laptops are where this workshop dies. Then git, an IDE that reads JSON Schema — VS Code, Kiro, anything schema-aware — and network egress to pypi.org, github.com and opentide.org. Ask out loud who is behind a proxy, and deal with it now.
@@ -2707,9 +2708,9 @@ A good agent applies the suggestion and restores the real UUID with search. It n
 The calls on the right are what the agent makes: coverage, get_chaining, search for objectives with no rule.
 The JSON at the bottom is the same coverage answer from the CLI, real output from the tutorial repo.`,
   // Dry run
-  `Prompt 08: preview every deploy. On a fresh repo the dry run completes and tells you exactly what is missing: no tenant is configured, so a real deploy would stop.
+  `Prompt 08: preview every deploy. With one rule in STAGING and no tenant yet, the dry run completes and tells you exactly what is missing: no tenant is configured, so a real deploy would stop. A truly empty repo only prints SKIPPED, because there is nothing to deploy.
 Through MCP the agent previews one rule at a time with dry_run true.
-Tenants and credentials are yours to add, as GitHub secrets, never in the repo or the chat. With the sentinel extra and credentials, validate query --live checks the catalogue queries against your workspace.`,
+Tenants and credentials are yours to add, as GitHub secrets, never in the repo or the chat. Since 0.16.0 there are no install extras: one pip install opentide brings every vendor SDK, so with credentials validate query --live checks the catalogue queries against your workspace.`,
   // Divider 04
   `Chapter four: ship it. The agent's output is a pull request. CI runs every gate again, and humans promote.`,
   // PR
@@ -2718,7 +2719,8 @@ The pre-commit hook validates the commit itself, so a broken object never reache
   // CI
   `This is the workflow opentide setup wrote for GitHub. On a pull request: validate and lint strictly, check queries live when credentials exist, generate, deploy to STAGING, and write inflight preview shards for reviewers.
 On merge to main: validate, generate, deploy to PRODUCTION with promotion as deployment.toml configures, and publish the docs.
-Same engine and the same version pin as the laptop, with no agent in the loop. Put production behind a protected environment so a human approves it.`,
+Same engine and the same version pin as the laptop, with no agent in the loop. Put production behind a protected environment so a human approves it.
+One 0.16.0 detail worth saying out loud: live query validation and the staging deploy now read the tenant configuration from the default branch, not from the pull request. Before, a pull request could change which host received your platform credentials. A pipeline generated by an older version does not have this, so re-run opentide setup ci github with --yes once after upgrading.`,
   // MDR lifecycle
   `Zoom out from CI to the lifecycle a rule actually walks. Trace it with your hand: a signal leaves the backlog, gets a DESIGN, becomes a rule in DEVELOPMENT, then runs in STAGING against real data — that STAGING is exactly the deploy job you just saw. Stop at ACCEPTANCE and make the point of the slide — this is a hand-over gate, not a build step. The alert handling manager decides whether the rule is something their team can actually work at three in the morning: fidelity, severity, the response block. Ready means PRODUCTION; needs rework sends it back through IMPROVING. Then retirement, which is explicit: DISABLED, then REMOVED. No rule leaves silently.
 The colours are who owns the merge request, and that part is organisation-specific — this is how the European Commission CSOC splits it between CATCH and CSIRC. Tell the room to swap the team names for their own; the shape holds. Tie it to deployment.toml: every box here is a status, and each status already maps to a deploy strategy.`,

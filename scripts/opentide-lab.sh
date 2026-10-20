@@ -3,13 +3,13 @@
 # Every terminal window, JSON envelope and file tree on a slide should come
 # from a run like this, against the version the deck names.
 #
-#   pnpm lab                       # opentide 0.14.2 → .lab/soc
-#   OPENTIDE_VERSION=0.15.0 pnpm lab
+#   pnpm lab                       # opentide 0.16.0 → .lab/soc
+#   OPENTIDE_VERSION=0.15.0 pnpm lab   # any other release
 #
 # Then: source .lab/venv/bin/activate && cd .lab/soc && opentide …
 set -euo pipefail
 
-VERSION="${OPENTIDE_VERSION:-0.14.2}"
+VERSION="${OPENTIDE_VERSION:-0.16.0}"
 ROOT="$(cd "$(dirname "$0")/.." && pwd)/.lab"
 REPO="$ROOT/soc"
 export NO_COLOR=1 COLUMNS=110

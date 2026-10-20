@@ -8,6 +8,7 @@ import {
 import type { CSSProperties, ReactNode } from 'react';
 import azureSentinel from './assets/Azure-Sentinel.png';
 import ecLogo from './assets/ec-logo-horiz_en.png';
+import hackLuBadge from './assets/hack-round-dark.png';
 import flacon from './assets/opentide-flacon.png';
 import logo from './assets/opentide-logo.png';
 import rulezet from './assets/rulezet.jpg';
@@ -291,7 +292,31 @@ const TitleLT: Page = () => (
       padding: '0 140px',
     }}
   >
-    <img src={logo} alt="OpenTIDE" style={{ width: 132, height: 132 }} />
+    {/* logo row: hack.lu left, OpenTIDE centre, CSOC right. All three boxes are
+        200×200 and equal width, so space-between puts the OpenTIDE mark dead centre. */}
+    <div
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+      }}
+    >
+      <img
+        src={hackLuBadge}
+        alt="hack.lu 2026, 20th edition, Luxembourg"
+        style={{ width: 200, height: 200, objectFit: 'contain', display: 'block', borderRadius: '50%' }}
+      />
+      <img
+        src={logo}
+        alt="OpenTIDE"
+        style={{ width: 200, height: 200, objectFit: 'contain', display: 'block' }}
+      />
+      <img
+        src={unitedWeCyberdefend}
+        alt="United we cyberdefend, European Commission Cybersecurity Operations Centre"
+        style={{ width: 200, height: 200, objectFit: 'contain', display: 'block' }}
+      />
+    </div>
 
     <div
       style={{
@@ -309,7 +334,7 @@ const TitleLT: Page = () => (
           letterSpacing: '0.08em',
         }}
       >
-        hack.lu 2026 · lightning talk
+        20th edition hack.lu 2026 · lightning talk
       </span>
       <span style={{ fontFamily: mono, fontSize: 26, color: c.dim }}>·</span>
       <span style={{ fontSize: 28, fontWeight: 650, color: c.soft }}>Rémi Séguy</span>
@@ -353,33 +378,36 @@ const TitleLT: Page = () => (
       EU public licence.
     </p>
 
-    {/* provenance strip: the institution, and the campaign it belongs to */}
+    {/* bottom-left corner: the institution behind OpenTIDE */}
+    <img
+      src={ecLogo}
+      alt="European Commission"
+      style={{
+        position: 'absolute',
+        left: 140,
+        bottom: 56,
+        height: 56,
+        width: 'auto',
+        display: 'block',
+      }}
+    />
+
+    {/* bottom-right corner: where to find it */}
     <div
       style={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: 56,
-        marginTop: 64,
-        paddingTop: 40,
-        borderTop: `1px solid ${c.rule}`,
+        position: 'absolute',
+        right: 110,
+        bottom: 56,
+        fontFamily: mono,
+        fontSize: 24,
+        color: c.dim,
+        textAlign: 'right',
+        lineHeight: 1.6,
       }}
     >
-      <img
-        src={ecLogo}
-        alt="European Commission"
-        style={{ height: 86, width: 'auto', display: 'block' }}
-      />
-      <div style={{ width: 1, height: 86, background: c.rule }} />
-      <img
-        src={unitedWeCyberdefend}
-        alt="United we cyberdefend"
-        style={{ height: '156.74px', width: '147.58px', display: 'block', minWidth: '0px', minHeight: '0px', maxWidth: 'none', maxHeight: 'none', flexShrink: '0', flexGrow: '0', flexBasis: 'auto', translate: '1139.97px -696.83px', objectFit: 'cover' }}
-      />
-      <div style={{ marginLeft: 'auto', fontFamily: mono, fontSize: 24, color: c.dim, textAlign: 'right', lineHeight: 1.6 }}>
-        opentide.org
-        <br />
-        github.com/OpenTideHQ
-      </div>
+      opentide.org
+      <br />
+      github.com/OpenTideHQ
     </div>
   </div>
 );
@@ -935,16 +963,16 @@ const ThreeLayers: Page = () => (
 
     {/* LEVEL 3 · where the rule lands */}
     <div>
-      <LayerHead n="3" name="Platforms" sub="seven in the wheel, three on the roadmap" />
+      <LayerHead n="3" name="Platforms" sub="eight in the wheel, two on the roadmap" />
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 14 }}>
         <PlatformMini name="Microsoft Sentinel" id="sentinel" query="KQL check" />
         <PlatformMini name="Defender for Endpoint" id="defender_for_endpoint" query="KQL check" />
         <PlatformMini name="Splunk ES" id="splunk" query="SPL check" />
         <PlatformMini name="SentinelOne" id="sentinel_one" query="S1QL check" />
         <PlatformMini name="Carbon Black Cloud" id="carbon_black_cloud" query="Lucene check" />
+        <PlatformMini name="Elastic Security" id="elastic" query="ES|QL · EQL check" />
         <PlatformMini name="CrowdStrike Falcon" id="crowdstrike" query="no query check" />
         <PlatformMini name="HarfangLab" id="harfanglab" query="no query check" />
-        <PlatformMini name="Elastic Security" id="RFC 0007" query="accepted — not shipped" planned />
         <PlatformMini name="Sysdig Secure · Falco" id="RFC 0004" query="draft — not shipped" planned />
         <PlatformMini name="Graylog" id="community ask" query="not planned yet" planned />
       </div>
@@ -2067,7 +2095,7 @@ export const notes: (string | undefined)[] = [
   'Now the payoff. One line, no break. The shift is organisational as much as technical: a purple team documents the threat once, as a structured object, and the rule carries the UUID of the objective that justified it. The knowledge lives in the repository, not in a person. Six months later the chain still answers "why does this rule exist?" — which is the question the previous two slides could not answer.',
   'The same three objects, now as the order you ask in. The point to land is the dependency: the objective needs the threat UUID, and the rule needs the objective signal. Ask for the rule first and the agent invents a parent, which is exactly the drift we just spent two slides complaining about. The schema pills matter for one reason only — rules are at 1.1 while threats and objectives are at 1.0, so pin the version you talk about.',
   'Draw the rings from the inside out with your hand. Start with the smallest: a team that only documents threat vectors already gets something useful — a structured library instead of a wiki page. Add objectives and coverage becomes measurable. Only the outer ring manages the rules that ship. The point to land is that you do not have to reach the outer ring to get value, which is the honest answer to "this looks like a lot of process for my team". Then zoom into one objective box and spend your time there: the objective is not the unit a rule implements. It decomposes into signals — the pieces of evidence that would satisfy it — and each rule points at one signal. That is why a gap here is actionable: you are not told "this objective is weak", you are told which signal nobody has implemented yet. Mention that detection_model will also accept an objective UUID, and that naming the signal is the better habit. Then point at the three hollow squares on the lower right and be honest about them: detection_model is optional, so a rule with nothing behind it still validates and still deploys. Most rooms are importing a few hundred of these from a vendor pack, and the answer is not that OpenTide refuses them — it manages them and makes them visible, which is the first step to giving them a parent. This is the same rule that shows up blue on the Navigator layer later.',
-  'The whole stack on one slide — walk it top to bottom, one level at a time, and do not rush it. Level 1 is the chain we have been building all talk: threats, objectives, signals, rules. Level 2 is what that buys you operationally: because every rule arrives with a reason, its deployment can carry a status, and the status decides what deploy actually does — DESIGN inert, the middle band previewing, PRODUCTION releasing, DISABLED and REMOVED tearing down. IMPROVING is the dashed one: it is the rework loop back into PRODUCTION from the lifecycle diagram, not a forward step, and it is not in the default strategy table. Level 3 is where the rule lands: seven platforms bundled in the wheel, five of which opentide can query-check, with CrowdStrike and HarfangLab deploy-only — it says so rather than faking a pass. The three dashed boxes on the end are roadmap, not shipped: Elastic Security has an accepted RFC 0007, Sysdig with Falco is still draft RFC 0004, and Graylog is a community ask with nothing planned. Be explicit about that line so nobody leaves thinking they can target Elastic today.',
+  'The whole stack on one slide — walk it top to bottom, one level at a time, and do not rush it. Level 1 is the chain we have been building all talk: threats, objectives, signals, rules. Level 2 is what that buys you operationally: because every rule arrives with a reason, its deployment can carry a status, and the status decides what deploy actually does — DESIGN inert, the middle band previewing, PRODUCTION releasing, DISABLED and REMOVED tearing down. IMPROVING is the dashed one: it is the rework loop back into PRODUCTION from the lifecycle diagram, not a forward step, and it is not in the default strategy table. Level 3 is where the rule lands: eight platforms, all in the base install since 0.16.0 — one pip install, no extras — and six of them opentide can query-check against a tenant. CrowdStrike and HarfangLab are deploy-only, and it says so rather than faking a pass. Elastic Security is the newest: deploy arrived in 0.15.0 and setup platforms --elastic in 0.16.0, with ES|QL and EQL rules. The two dashed boxes on the end are roadmap, not shipped: Sysdig with Falco is a draft RFC 0004, and Graylog is a community ask with nothing planned. Be explicit about that line so nobody leaves thinking they can target Sysdig or Graylog today.',
   'Chapter break, and a change of subject: from the model to why any of this is packaged the way it is. One line is enough — OpenTIDE ran in production for years as a git submodule, and it is now a versioned CLI on PyPI. The reason matters for the next two slides: a submodule cannot be pinned, cannot be installed by an agent, and cannot be checked in CI without copying glue around.',
   'The number slide, and the reason the project exists. Trace the blue curve with your hand: intel volume compounds — advisories, CVEs, campaigns, thousands a month. Then the dotted line: engineering throughput, almost flat, because every TTP costs hours of human work to read, model, write, tune and deploy. The hatched area between them is the gap, and it widens on its own. Land the honest framing: the bottleneck was never the strategy, it was capacity. Tens of production-ready rules a month against thousands of intel items is not a discipline problem, it is an arithmetic problem — which is why agents matter, and why the spec has to keep them aligned.',
   'And this is the answer to "so do you let the agent deploy?". Two zones, and the boundary is the whole argument. Everything in the blue zone is drafting and checking — MCP tools, skills, the CLI — and nothing in it deploys. The dashed box is the brief, then search for what exists, get_chaining for the graph, draft the YAML, and on the way back validation_report, validate query --live against the tenant, and a dry-run deploy. Fail goes straight back to editing, in red. The agent\'s output is a pull request and nothing more. Below the line every step is a human decision: review the diff, merge, STAGING on merge, approval, PRODUCTION. Close the talk\'s argument here — agents write the queries, the engine checks them, and a person still signs off.',
