@@ -371,7 +371,7 @@ const TitleLT: Page = () => (
     </p>
 
     <p style={{ fontSize: 34, lineHeight: 1.5, color: c.muted, margin: '30px 0 0', maxWidth: 1420 }}>
-      Developed at the <strong style={{ color: c.soft, fontWeight: 650 }}>CSOC of the European<br />{''}</strong>and open sourced since 2024 under the{' '}
+      Developed at the <strong style={{ color: c.soft, fontWeight: 650 }}>CSOC of the European Commission<br />{''}</strong>and open sourced since 2024 under the{' '}
       <span style={{ fontFamily: mono, fontSize: 30, color: 'var(--osd-accent)' }}>
         EUPL v1.2
       </span>{' '}

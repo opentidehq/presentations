@@ -15,6 +15,7 @@ import MonoUrl from '@assets/fonts/JetBrainsMono-Variable-latin.woff2';
 import logoNormal from '@assets/brand/logo-normal.svg';
 import mdrLifecycle from './assets/MDR_lifecycle.svg';
 import qrOpentide from './assets/qr-opentide-org.svg';
+import socPrime from './assets/soc_prime.jpg';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // opentide workshop — detection engineering with a coding agent.
@@ -1795,6 +1796,67 @@ const WireAgent: Page = () => (
   </Frame>
 );
 
+const PRIME_MCP_JSON = `{
+  "mcpServers": {
+    "soc-prime-architect": {
+      "url": "https://pubmcps.socprime.com/mcp",
+      "headers": {
+        "Authorization": "Bearer \${SOC_PRIME_MCP_TOKEN}",
+        "Accept": "text/event-stream"
+      }
+    }
+  }
+}`;
+
+const PRIME_TOOLS: [string, string][] = [
+  ['deep_threat_research', 'a report → summary, flow, rules'],
+  ['generate_attack_flow', 'ATT&CK techniques + a diagram'],
+  ['generate_behavior_rule', 'Sigma rules from the report'],
+  ['translate', 'between platforms, incl. opentide-mdr'],
+  ['optimize_query', 'recommendations for one SIEM'],
+  ['generate_decision_tree', 'analyst triage path for a rule'],
+  ['search_skills · get_skill', 'the agentic skills catalogue'],
+  ['run_architect', 'run one skill, by id'],
+];
+
+const PrimeArchitect: Page = () => (
+  <Frame chapter={['01', 'set up']} source="help.socprime.com/en/articles/16150919-mcp · tdm.socprime.com">
+    <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 48 }}>
+      <div>
+        <H size={60}>Add Prime Architect too.</H>
+        <Lead maxWidth={1420}>A second MCP server next to opentide. I hand out accounts; you make your own token.</Lead>
+      </div>
+      <img
+        src={socPrime}
+        alt="SOC Prime — Prime Architect"
+        style={{ width: 216, display: 'block', marginTop: 4, borderRadius: 12, border: `1px solid ${C.line}` }}
+      />
+    </div>
+    <div style={{ display: 'flex', gap: 56, marginTop: 34 }}>
+      <div style={{ width: 720, display: 'flex', flexDirection: 'column', gap: 20 }}>
+        <Code lang="json" title=".mcp.json" tag="add next to opentide" code={PRIME_MCP_JSON} size={18.5} lh={1.45} />
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
+          <ELink icon="globe" label="sign in" value="tdm.socprime.com" />
+          <ELink icon="lock" label="token" value="Platform Settings → MCP Tokens" />
+          <ELink icon="plug" label="auth" value="Bearer token only" />
+        </div>
+      </div>
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+        <ColHead icon="spark">prime architect MCP tools</ColHead>
+        {PRIME_TOOLS.map(([t, d]) => (
+          <div key={t} style={{ display: 'flex', alignItems: 'baseline', gap: 20, padding: '12px 0', borderTop: `1px solid ${C.line}` }}>
+            <span style={{ width: 330, fontFamily: MONO, fontSize: 20, color: ACC, fontWeight: 600 }}>{t}</span>
+            <span style={{ fontSize: 22, color: C.muted }}>{d}</span>
+          </div>
+        ))}
+        <Note tag="watch for" style={{ marginTop: 22 }}>
+          Prime Architect drafts. The gate does not move: a translated rule still has to pass <M>validate --strict</M>.
+        </Note>
+      </div>
+    </div>
+  </Frame>
+);
+
 const HOUSE_RULES = `## Detection workflow
 - Order: threat → objective → rule, linked by UUID.
 - Vocabulary values come from .opentide/schemas,
@@ -2670,6 +2732,11 @@ Point out: the engine, CI and the agent all read the same files. That is what ke
 These are the tools it gets: search, chaining, coverage, structured validation, a tenant check, dry-run deploys and deployment status.
 Skills: opentide-detection-rule and detection-engineering come by default; add the threat-vector, objective or KQL skills with --install.
 Prompt 02 is a sanity check. If the agent cannot name these tools, fix the wiring now, not in lab 2.`,
+  // Prime Architect
+  `While they are in .mcp.json, add a second server, because the two do different jobs. opentide owns your catalogue and the gates; Prime Architect brings SOC Prime's Threat Detection Marketplace to the same agent.
+Do the admin here and now. I hand out the accounts, so sign in at tdm.socprime.com, then Account icon, Platform Settings, MCP Tokens, Add New MCP Token — the token is yours, not mine, and it carries an Allowed APIs list you can narrow. Bearer token is the only supported scheme today: no OAuth, no OIDC. Note the shape of the block on the left — it is a remote URL with an Authorization header, not a local command, and the token comes from the environment so it never lands in the repo or in a chat transcript.
+The right column is what the agent gains. deep_threat_research takes a report and walks through a summary, an attack flow, a rule search and behaviour rules. generate_attack_flow and generate_behavior_rule are the same steps on their own. translate moves a query between platforms, and the catalogue includes opentide-mdr, which is the one to point out: a Splunk or Sentinel query can come back in our own rule format. optimize_query and generate_decision_tree are the review-side tools. Then the skills tools: search and read the SOC Prime skills catalogue, and run_architect executes one by id.
+Land the "watch for" note, because it is the whole reason this slide sits inside chapter one. Nothing here replaces the gate. A rule that arrives through translate is a draft like any other: it needs the objective link, a UUID, vocabulary from the schemas, and a clean validate --strict before anyone calls it done.`,
   // House rules
   `CLAUDE.md, or AGENTS.md for other agents, is read at the start of every session. Write the gates there once instead of repeating them in every prompt.
 Prompt 03 asks the agent to add the section on the right: the order, vocabularies from the schemas, UUIDs from uuid4, done means validate strict passes, STAGING first, dry-run only, hands off credentials.
@@ -2764,6 +2831,7 @@ export default [
   PromptSetup,
   WhatYouGet,
   WireAgent,
+  PrimeArchitect,
   HouseRules,
   // 02 · spec first
   DividerSpec,
