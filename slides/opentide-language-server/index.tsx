@@ -2340,21 +2340,21 @@ const Gone = ({ children }: { children: ReactNode }) => (
 );
 
 const Status: Page = () => (
-  <Frame chapter={['··', 'under the hood']} source="ADR 0012 · epic #1219 · #1231 · crates/*/Cargo.toml on integration/unified-core, 2026-11-16">
+  <Frame chapter={['··', 'under the hood']} source="ADR 0012 · epic #1219 · #1231 (measurements) · nightly run 43936053337 on integration/unified-core, 2026-11-16">
     <H>Where the switch stands.</H>
-    <Lead>Merged on the integration/unified-core branch, not in a release yet. tree-sitter is deleted in one final stage.</Lead>
+    <Lead>All eleven languages run on pure Rust, and tree-sitter is deleted. Merged on the integration/unified-core branch, not in a release yet.</Lead>
     <div style={{ display: 'flex', gap: 56, marginTop: 44 }}>
       <div style={{ width: 1040, flex: '0 0 auto' }}>
-        <StatusRow langs="Kibana KQL · Lucene" what="parsers merged" state="analysis runs on them" tone="solid" />
-        <StatusRow langs="KQL · ES|QL · YARA-L" what="parsers merged, typed ASTs" state="switch in review" tone="accent" />
-        <StatusRow langs="CQL" what="parser merged" state="switch in review" tone="accent" />
-        <StatusRow langs="EQL" what="lexer merged" state="switch in review" tone="accent" />
-        <StatusRow langs="Falco" what="rowan tree merged" state="switch in review" tone="accent" />
-        <StatusRow langs="YARA" what="YARA-X's own parser and CST" state="switch in review" tone="accent" />
-        <StatusRow langs="SPL · Exabeam" what="on tree-sitter today" state="not switched yet" tone="plain" />
+        <StatusRow langs="Kibana KQL · Lucene" what="hand-written parsers" state="switched" tone="solid" />
+        <StatusRow langs="KQL · ES|QL · SPL" what="hand-written parsers, typed ASTs" state="switched" tone="solid" />
+        <StatusRow langs="EQL · CQL · YARA-L" what="hand-written parsers, typed ASTs" state="switched" tone="solid" />
+        <StatusRow langs="Falco · Exabeam" what="hand-written parsers" state="switched" tone="solid" />
+        <StatusRow langs="YARA" what="YARA-X's own parser and CST" state="switched" tone="solid" />
+        <StatusRow langs="Browser build" what="−4.5 % gzipped, clean build −22 %" state="measured" tone="accent" />
+        <StatusRow langs="Final nightly" what="99 of 99 jobs: fuzz, vendor oracles, 6 platforms" state="green" tone="accent" />
       </div>
       <Card style={{ flex: 1, padding: '28px 32px', alignSelf: 'flex-start' }}>
-        <Kicker>deleted in the final stage · #1231</Kicker>
+        <Kicker>deleted in the final stage · #1231 · done</Kicker>
         <Gone>6.14 MB of generated <M>parser.c</M> and <M>grammars/</M></Gone>
         <Gone>the C toolchain for parsing, Node and <M>tree-sitter-cli</M></Gone>
         <Gone>wasi-libc and 7 syscall shims in the browser build</Gone>
@@ -2522,7 +2522,7 @@ The colours you see in your editor come straight from these kinds. Hover any tok
   `The parser follows the KQL grammar. The table goes under TABLE_REF. The filter is a WHERE_OPERATOR, and inside it a comparison: FileName, equals ignoring case, lsass.exe.
 Hover a node: the characters it covers light up on the left. That is how the engine knows FileName is read by the filter, not kept by project.
 This tree is real output of the new KQL parser: hand-written recursive descent in Rust, on a shared toolkit called opentide-parse, building a lossless rowan tree, the same tree library rust-analyzer uses. A .ungram file per language describes the tree's shape, and codegen writes typed accessors from it.
-It replaces the tree-sitter grammars and their generated C. That work is merged on the integration branch; more on its status at the end.`,
+It replaced the tree-sitter grammars and their generated C. That work is merged on the integration branch; more on its status at the end.`,
   // Recovery
   `In real life you are always mid-sentence. Here the value is missing. The parser does not give up: it reports "expected an expression" at that spot and keeps the rest of the tree.
 So the table check and the column check still run while you type. Both states on screen are real parser output.
@@ -2549,8 +2549,8 @@ The gate was a differential over 12,475 inputs: zero differences on the 5,884 va
 On the right, real pilot code, abridged: one function turns "a or b or c" into a single node. Every parser is built from small functions like this on the shared opentide-parse toolkit; ungrammar files describe the trees and cargo xtask codegen writes their typed accessors.`,
   // Status
   `Where it stands today, the 16th of November. Everything here is merged on the integration/unified-core branch, not released yet.
-Kibana KQL and Lucene: the analysis already runs on the new parsers. KQL, ES|QL, YARA-L and CQL have their parsers merged, EQL its lexer, Falco its tree, YARA moves onto YARA-X's own parser; those switches are in review. SPL and Exabeam are still on tree-sitter.
-When every language has switched, one final stage deletes tree-sitter: the generated C, the C toolchain for parsing, the browser build's libc shims and the unsafe FFI. Native builds still compile some C for TLS and crypto; that is a separate decision.`,
+Every one of the eleven languages now runs on its own pure-Rust parser: Kibana KQL, Lucene, KQL, ES|QL, SPL, EQL, CQL, YARA-L, Falco and Exabeam on hand-written parsers, and YARA on YARA-X's own parser. Each switched only on zero differences against the old engine on valid input.
+The final stage then deleted tree-sitter: the generated C, the C toolchain for parsing, the browser build's libc shims and the unsafe FFI. The browser module is 4.5 percent smaller gzipped and builds 22 percent faster from clean; analysis speed is unchanged. The full nightly, with fuzzing, the vendor-parser oracles and six platforms, is green. Native builds still compile some C for TLS and crypto; that is a separate decision.`,
   // Hosts
   `The language server is no longer a separate repository. It merged into opentide with its history: one Cargo workspace, so there is no engine version to pin and keep in step.
 One entry point, opentide-analysis. The same compiled engine runs inside the opentide Python package as opentide lsp start, as a standalone binary for VS Code, Neovim, Helix and Zed, as WebAssembly in a browser tab, and as a plain JSON command for CI and coding agents.
