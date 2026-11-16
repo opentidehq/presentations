@@ -19,8 +19,9 @@ import logoNormal from '@assets/brand/logo-normal.svg';
 // tokens, a syntax tree, then analyzers. For a mixed, mostly non-engineering
 // audience. Theme: themes/opentide-coastal.md. Shared chrome, code blocks,
 // icons and the ASCII tide are copied from slides/opentide-workshop.
-// Facts: opentidehq/language-server 0.10.0 (crates, grammars, catalogs,
-// CHANGELOG) and opentidehq/opentide analysis/Cargo.toml.
+// Facts: opentidehq/opentide, branch integration/unified-core (the merged
+// Cargo workspace under crates/, ADR 0004; pure-Rust parsing, ADR 0012 and
+// epic #1219). Tree and error texts are real KQL parser output from there.
 // Brand: opentide.org "coastal precision", light register: white + Pantone
 // Reflex Blue (#001489), Inter + JetBrains Mono. No yellow on white.
 // One signature motion: the ASCII tide (a FLIP fluid whose glyphs are real
@@ -1295,24 +1296,24 @@ const TideCanvas = ({
 const Q_COVER = [
   'DeviceProcessEvents | where FileName =~ "lsass.exe" | project Timestamp, DeviceName',
   'index=main sourcetype=sysmon | stats count by host   FROM logs-* | WHERE process.name == "lsass.exe"',
-  'source_file query tabular_expression tabular_primary tabular_operator where_operator comparison_expression',
+  'SOURCE_FILE QUERY TABULAR_EXPRESSION TABULAR_SOURCE TABLE_REF WHERE_OPERATOR COMPARISON_EXPR NAME_REF LITERAL',
   'kql_unknown_column  kql_table_not_declared  spl_unknown_command  esql_metadata_id  ecs_unknown_field',
-  'opentide-core opentide-syntax opentide-kql opentide-spl opentide-esql opentide-eql opentide-analysis opentide-lsp',
+  'opentide-core opentide-parse opentide-kql opentide-spl opentide-esql opentide-eql opentide-analysis opentide-lsp',
 ].join('   ') + '   ';
 const Q_TOK = [
-  'identifier "|" "where" identifier "=~" string "|" "project" identifier "," identifier',
+  'IDENT WHITESPACE PIPE WHERE_KW IDENT CMP_OP STRING PIPE PROJECT_KW IDENT COMMA IDENT',
   '@type @operator.pipe @keyword @variable @operator @string @punctuation.delimiter',
   '0..19 20..21 22..27 28..36 37..39 40..51 52..53 54..61 62..71 71..72 73..83',
 ].join('   ') + '   ';
 const Q_TREE = [
-  'source_file query tabular_expression tabular_primary identifier tabular_operator where_operator',
-  'comparison_expression string project_operator project_item ERROR MISSING',
-  'parser.parse(source, None)  first_error()  walk_with_ancestors  ByteSpan::new(start, end)',
+  'SOURCE_FILE QUERY TABULAR_EXPRESSION TABULAR_SOURCE TABLE_REF WHERE_OPERATOR COMPARISON_EXPR',
+  'NAME_REF LITERAL PROJECT_OPERATOR ERROR  expected an expression  TooDeep  TreeTooDeep',
+  'p.start()  p.at(K::PIPE)  p.expect(K::R_PAREN)  m.complete(p, kind)  m.precede(p)  GreenNode  TextRange',
 ].join('   ') + '   ';
 const Q_ANA = [
   'kql_parse_error kql_unknown_table kql_table_not_declared kql_unknown_column kql_where_not_first',
   'kql_control_command_unsupported invalid_ref duplicate_id spl_unknown_command ecs_type_mismatch',
-  'catalogs/kql/defender/columns.toml visibility.toml Declared Undeclared Unchecked',
+  'data/catalogs/kql/defender/columns.toml visibility.toml Declared Undeclared Unchecked',
 ].join('   ') + '   ';
 const Q_CLOSE = [Q_COVER, Q_TREE, Q_ANA].join('   ');
 
@@ -1359,8 +1360,8 @@ const CTerm = ({ title, parts, size = 21, lh = 1.55, style }: { title: ReactNode
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Language-server patterns: a clock for scripted motion, the sample query,
-// its tokens and its tree (node kinds from grammars/tree-sitter-opentide-kql,
-// captures from highlights/queries/kql/highlights.scm).
+// its tokens and its tree (token and node kinds from crates/opentide-kql's
+// logos lexer and rowan parser; captures from highlights/spec.toml).
 // ─────────────────────────────────────────────────────────────────────────────
 
 // Milliseconds since this page became active. Inactive instances (thumbnails,
@@ -1422,13 +1423,13 @@ const TOKENS: Tok[] = (() => {
   while ((m = rx.exec(QUERY)) !== null) {
     const text = m[0];
     const start = m.index;
-    let kind = 'identifier';
+    let kind = 'IDENT';
     let cap: Cap = 'variable';
-    if (text.startsWith('"')) [kind, cap] = ['string', 'string'];
-    else if (text === '|') [kind, cap] = ['"|"', 'operator.pipe'];
-    else if (text === '=~') [kind, cap] = ['"=~"', 'operator'];
-    else if (text === ',') [kind, cap] = ['","', 'punctuation.delimiter'];
-    else if (KEYWORDS.has(text)) [kind, cap] = [`"${text}"`, 'keyword'];
+    if (text.startsWith('"')) [kind, cap] = ['STRING', 'string'];
+    else if (text === '|') [kind, cap] = ['PIPE', 'operator.pipe'];
+    else if (text === '=~') [kind, cap] = ['CMP_OP', 'operator'];
+    else if (text === ',') [kind, cap] = ['COMMA', 'punctuation.delimiter'];
+    else if (KEYWORDS.has(text)) [kind, cap] = [`${text.toUpperCase()}_KW`, 'keyword'];
     else if (start === 0) cap = 'type';
     out.push({ text, start, end: start + text.length, kind, cap });
   }
@@ -1469,7 +1470,9 @@ const Cover: Page = () => (
     <div style={{ position: 'absolute', right: 120, top: 92, height: 62, display: 'flex', alignItems: 'center', gap: 14, fontFamily: MONO, fontSize: 20, color: C.muted }}>
       <span>deep dive</span>
       <span style={{ color: C.dim }}>·</span>
-      <span>language server 0.10.0</span>
+      <span>language server</span>
+      <span style={{ color: C.dim }}>·</span>
+      <span>unified core</span>
       <span style={{ color: C.dim }}>·</span>
       <span>Rust</span>
     </div>
@@ -1489,7 +1492,7 @@ const Cover: Page = () => (
 // 00 · AS YOU TYPE — editor mock: the typo is typed, flagged, explained.
 // ─────────────────────────────────────────────────────────────────────────────
 const ED_TYPED = '| where FileNam =~ "lsass.exe"';
-const LANGS = ['KQL', 'SPL', 'ES|QL', 'EQL', 'Kibana KQL', 'Lucene', 'Falco', 'Tide YAML'];
+const LANGS = ['KQL', 'SPL', 'ES|QL', 'EQL', 'Kibana KQL', 'Lucene', 'Falco', 'CQL', 'YARA', 'YARA-L', 'Exabeam', 'Tide YAML'];
 
 const AsYouType: Page = () => {
   const t = useClock(5200);
@@ -1536,7 +1539,7 @@ const AsYouType: Page = () => {
     ['7', <>      | <span style={{ color: BLUE }}>project</span> Timestamp, DeviceName</>],
   ];
   return (
-    <Frame chapter={['00', 'why it matters']} source="opentidehq/language-server · crates/opentide-kql/src/schema.rs · kql_unknown_column">
+    <Frame chapter={['00', 'why it matters']} source="opentidehq/opentide · crates/opentide-kql/src/schema.rs · kql_unknown_column">
       <div style={{ display: 'flex', gap: 64, height: '100%' }}>
         <div style={{ width: 600, flex: '0 0 auto', paddingTop: 10 }}>
           <H size={68}>Every keystroke, checked.</H>
@@ -1544,7 +1547,7 @@ const AsYouType: Page = () => {
             Between your editor and your detections sits a small, fast program: the language server. It reads the query the way the
             platform will, and tells you what is wrong before anything runs.
           </Lead>
-          <Kicker style={{ marginTop: 44 }}>eight languages, one engine</Kicker>
+          <Kicker style={{ marginTop: 44 }}>eleven query languages and Tide YAML, one engine</Kicker>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, marginTop: 16 }}>
             {LANGS.map((l, i) => (
               <Chip key={l} tone={i === 0 ? 'solid' : 'accent'} size={20} style={{ opacity: prog(t, 200 + i * 90, 400), transform: `translateY(${(1 - prog(t, 200 + i * 90, 400)) * 10}px)` }}>
@@ -1624,8 +1627,8 @@ const AsYouType: Page = () => {
 // ─────────────────────────────────────────────────────────────────────────────
 const STAGES: { icon: IconName; title: string; mono: string; say: string; detail: string }[] = [
   { icon: 'editor', title: 'Text', mono: 'edits from the editor', say: 'You type. The editor sends only what changed.', detail: 'Incremental sync: each keystroke arrives as a small edit, positions counted in UTF-16 the way editors count them.' },
-  { icon: 'layers', title: 'Tokens', mono: 'kind + byte span', say: 'The text is cut into words the language knows.', detail: 'A lexer generated from the grammar tags every piece: identifier, keyword, string, pipe. Each keeps its exact start and end byte.' },
-  { icon: 'branch', title: 'Syntax tree', mono: 'tree-sitter', say: 'Words are grouped by what belongs to what.', detail: 'The parser nests the tokens into a tree: this filter belongs to that step of that query. Half-typed text still makes a tree.' },
+  { icon: 'layers', title: 'Tokens', mono: 'kind + byte span', say: 'The text is cut into words the language knows.', detail: 'A lexer written in Rust (logos) tags every piece: identifier, keyword, string, pipe. Each keeps its exact start and end byte.' },
+  { icon: 'branch', title: 'Syntax tree', mono: 'rowan · hand-written', say: 'Words are grouped by what belongs to what.', detail: 'A hand-written Rust parser nests the tokens into a lossless tree: this filter belongs to that step of that query. Half-typed text still makes a tree.' },
   { icon: 'search', title: 'Analyzers', mono: 'catalogs + checks', say: 'Checks ask questions of the tree.', detail: 'Does the table exist on this platform? Is this column real? Is the filter in the right place? Each answer is a named diagnostic.' },
   { icon: 'eye', title: 'Answers', mono: 'diagnostics · hover', say: 'Red lines, hovers and suggestions in your editor.', detail: 'Every finding carries a code, a severity and the exact range, so the editor underlines the right characters.' },
 ];
@@ -1639,7 +1642,7 @@ const Pipeline: Page = () => {
   const GAP = (1680 - W * 5) / 4;
   const pulseX = ((t % 2000) / 2000) * (W + GAP);
   return (
-    <Frame chapter={['00', 'the pipeline']} source="opentidehq/language-server · docs/ARCHITECTURE.md">
+    <Frame chapter={['00', 'the pipeline']} source="opentidehq/opentide · docs/engine/ARCHITECTURE.md · ADR 0012">
       <H>From keystroke to red line.</H>
       <Lead>The same pipeline runs for every language. Hover a step.</Lead>
       <div style={{ position: 'relative', height: 330, marginTop: 64 }}>
@@ -1711,9 +1714,9 @@ const Lexer: Page = () => {
   const tok = TOKENS[sel];
   const cap = CAP[tok.cap];
   return (
-    <Frame chapter={['01', 'tokens']} source="grammars/tree-sitter-opentide-kql/grammar.js · highlights/queries/kql/highlights.scm">
+    <Frame chapter={['01', 'tokens']} source="crates/opentide-kql/src/{lexer,highlight}.rs · highlights/spec.toml · integration/unified-core">
       <H>One pass, left to right.</H>
-      <Lead>The lexer reads the query once and tags every piece with a kind and its exact position. Spaces and line breaks are skipped. Hover a token.</Lead>
+      <Lead>The lexer reads the query once and tags every piece with a kind and its exact position. Spaces and line breaks become tokens too, so no byte is lost. Hover a token.</Lead>
       <div style={{ display: 'flex', gap: 48, marginTop: 44, flex: 1 }}>
         <div style={{ width: 1060, flex: '0 0 auto', display: 'flex', flexDirection: 'column', gap: 28 }}>
           <Card style={{ padding: '30px 40px', position: 'relative' }}>
@@ -1744,7 +1747,7 @@ const Lexer: Page = () => {
             />
           </Card>
           <div>
-            <Kicker style={{ marginBottom: 14 }}>token stream · {Math.min(scanned, TOKENS.length)} / {TOKENS.length}</Kicker>
+            <Kicker style={{ marginBottom: 14 }}>token stream · {Math.min(scanned, TOKENS.length)} / {TOKENS.length} · whitespace tokens hidden</Kicker>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12 }}>
               {TOKENS.map((tk, i) => {
                 const c = CAP[tk.cap];
@@ -1807,20 +1810,18 @@ const DividerTree: Page = () => (
 type TNode = { kind: string; depth: number; span: [number, number]; leaf?: string; cap?: Cap; say: string };
 const tokSpan = (a: number, b = a): [number, number] => [TOKENS[a].start, TOKENS[b].end];
 const TREE: TNode[] = [
-  { kind: 'source_file', depth: 0, span: tokSpan(0, 10), say: 'The whole file.' },
-  { kind: 'query', depth: 1, span: tokSpan(0, 10), say: 'One query, as opposed to a let statement or a control command.' },
-  { kind: 'tabular_expression', depth: 2, span: tokSpan(0, 10), say: 'A source of rows, then a chain of steps joined by pipes.' },
-  { kind: 'tabular_primary', depth: 3, span: tokSpan(0), say: 'Where the rows come from.' },
-  { kind: 'identifier', depth: 4, span: tokSpan(0), leaf: 'DeviceProcessEvents', cap: 'type', say: 'Named as a table, so the catalog can check it.' },
-  { kind: 'tabular_operator', depth: 3, span: tokSpan(2, 5), say: 'Step one.' },
-  { kind: 'where_operator', depth: 4, span: tokSpan(2, 5), say: 'A filter: keep only the rows that match.' },
-  { kind: 'comparison_expression', depth: 5, span: tokSpan(3, 5), say: 'Left side, operator, right side.' },
-  { kind: 'identifier', depth: 6, span: tokSpan(3), leaf: 'FileName', cap: 'variable', say: 'A column read by the filter.' },
-  { kind: 'string', depth: 6, span: tokSpan(5), leaf: '"lsass.exe"', cap: 'string', say: 'The value it is compared with.' },
-  { kind: 'tabular_operator', depth: 3, span: tokSpan(7, 10), say: 'Step two.' },
-  { kind: 'project_operator', depth: 4, span: tokSpan(7, 10), say: 'Keep only these columns.' },
-  { kind: 'project_item', depth: 5, span: tokSpan(8), leaf: 'Timestamp', cap: 'variable', say: 'A column the result keeps.' },
-  { kind: 'project_item', depth: 5, span: tokSpan(10), leaf: 'DeviceName', cap: 'variable', say: 'A column the result keeps.' },
+  { kind: 'SOURCE_FILE', depth: 0, span: tokSpan(0, 10), say: 'The whole file: every byte, spaces and line breaks included.' },
+  { kind: 'QUERY', depth: 1, span: tokSpan(0, 10), say: 'One query, as opposed to a let statement or a control command.' },
+  { kind: 'TABULAR_EXPRESSION', depth: 2, span: tokSpan(0, 10), say: 'A source of rows, then a chain of steps joined by pipes.' },
+  { kind: 'TABULAR_SOURCE', depth: 3, span: tokSpan(0), say: 'Where the rows come from.' },
+  { kind: 'TABLE_REF', depth: 4, span: tokSpan(0), leaf: 'DeviceProcessEvents', cap: 'type', say: 'Named as a table, so the catalog can check it.' },
+  { kind: 'WHERE_OPERATOR', depth: 3, span: tokSpan(2, 5), say: 'Step one, a filter: keep only the rows that match.' },
+  { kind: 'COMPARISON_EXPR', depth: 4, span: tokSpan(3, 5), say: 'Left side, operator, right side.' },
+  { kind: 'NAME_REF', depth: 5, span: tokSpan(3), leaf: 'FileName', cap: 'variable', say: 'A column read by the filter.' },
+  { kind: 'LITERAL', depth: 5, span: tokSpan(5), leaf: '"lsass.exe"', cap: 'string', say: 'The value it is compared with.' },
+  { kind: 'PROJECT_OPERATOR', depth: 3, span: tokSpan(7, 10), say: 'Step two: keep only these columns.' },
+  { kind: 'NAME_REF', depth: 4, span: tokSpan(8), leaf: 'Timestamp', cap: 'variable', say: 'A column the result keeps.' },
+  { kind: 'NAME_REF', depth: 4, span: tokSpan(10), leaf: 'DeviceName', cap: 'variable', say: 'A column the result keeps.' },
 ];
 const ROW_H = 44;
 const IND = 46;
@@ -1890,14 +1891,14 @@ const TreeBuild: Page = () => {
   const t = useClock(500 + TREE.length * 170 + 400);
   const [hover, setHover] = useState<number | null>(null);
   const shown = Math.floor((t - 500) / 170) + 1;
-  const sel = hover ?? (shown >= TREE.length ? 6 : null);
+  const sel = hover ?? (shown >= TREE.length ? 5 : null);
   const span = sel !== null ? TREE[sel].span : null;
   return (
-    <Frame chapter={['02', 'syntax tree']} source="grammars/tree-sitter-opentide-kql/grammar.js · crates/opentide-syntax · tree-sitter 0.25">
+    <Frame chapter={['02', 'syntax tree']} source="crates/opentide-kql/src/parser · crates/opentide-parse · ADR 0012 · integration/unified-core">
       <div style={{ display: 'flex', gap: 60, height: '100%' }}>
         <div style={{ width: 720, flex: '0 0 auto' }}>
           <H size={60}>Every token finds its parent.</H>
-          <Lead maxWidth={700}>The parser follows the KQL grammar and nests each token inside the step it belongs to. Hover a node: the characters it covers light up.</Lead>
+          <Lead maxWidth={700}>A hand-written Rust parser follows the KQL grammar and nests each token inside the step it belongs to. Hover a node: the characters it covers light up.</Lead>
           <Card style={{ marginTop: 40, padding: '24px 30px' }}>
             <QueryText
               size={27}
@@ -1917,7 +1918,7 @@ const TreeBuild: Page = () => {
           </div>
         </div>
         <div style={{ flex: 1, paddingTop: 6 }}>
-          <Kicker style={{ marginBottom: 14 }}>concrete syntax tree · named nodes · wrapper chains folded</Kicker>
+          <Kicker style={{ marginBottom: 14 }}>rowan syntax tree · real parser output · tokens folded into their nodes</Kicker>
           <TreeView nodes={TREE} shown={shown} sel={sel} onHover={setHover} />
         </div>
       </div>
@@ -1936,19 +1937,19 @@ const Recovery: Page = () => {
   const text = RECOVER_FULL.slice(0, RECOVER_CUT + typedN);
   const complete = typedN >= 11;
   const nodes: TNode[] = [
-    { kind: 'tabular_expression', depth: 0, span: [0, text.length], say: '' },
-    { kind: 'tabular_primary', depth: 1, span: [0, 19], leaf: 'DeviceProcessEvents', cap: 'type', say: '' },
-    { kind: 'where_operator', depth: 1, span: [22, text.length], say: '' },
-    { kind: 'comparison_expression', depth: 2, span: [28, text.length], say: '' },
-    { kind: 'identifier', depth: 3, span: [28, 36], leaf: 'FileName', cap: 'variable', say: '' },
+    { kind: 'TABULAR_EXPRESSION', depth: 0, span: [0, complete ? 51 : 39], say: '' },
+    { kind: 'TABLE_REF', depth: 1, span: [0, 19], leaf: 'DeviceProcessEvents', cap: 'type', say: '' },
+    { kind: 'WHERE_OPERATOR', depth: 1, span: [22, complete ? 51 : 39], say: '' },
+    { kind: 'COMPARISON_EXPR', depth: 2, span: [28, complete ? 51 : 39], say: '' },
+    { kind: 'NAME_REF', depth: 3, span: [28, 36], leaf: 'FileName', cap: 'variable', say: '' },
     complete
-      ? { kind: 'string', depth: 3, span: [40, 51], leaf: '"lsass.exe"', cap: 'string', say: '' }
-      : { kind: 'MISSING', depth: 3, span: [text.length, text.length], leaf: 'a value', cap: 'variable', say: '' },
+      ? { kind: 'LITERAL', depth: 3, span: [40, 51], leaf: '"lsass.exe"', cap: 'string', say: '' }
+      : { kind: 'error', depth: 3, span: [39, 40], leaf: 'expected an expression', cap: 'variable', say: '' },
   ];
   return (
-    <Frame chapter={['02', 'syntax tree']} source="crates/opentide-syntax/src/lib.rs · fuzz/fuzz_targets · CHANGELOG 0.10.0 (#178, #179)">
+    <Frame chapter={['02', 'syntax tree']} source="crates/opentide-parse · crates/opentide-kql/src/parser · ADR 0012 decisions 4–5 (#1266, #1267, #1279)">
       <H>Half-typed is still a tree.</H>
-      <Lead>Most of the time you are mid-sentence. The parser marks what is missing and keeps everything else, so the checks never stop.</Lead>
+      <Lead>Most of the time you are mid-sentence. The parser says what it expected, keeps everything else, and the checks never stop.</Lead>
       <div style={{ display: 'flex', gap: 48, marginTop: 44 }}>
         <div style={{ width: 900, flex: '0 0 auto', display: 'flex', flexDirection: 'column', gap: 26 }}>
           <Card style={{ padding: '24px 30px', height: 150, boxSizing: 'border-box' }}>
@@ -1959,15 +1960,15 @@ const Recovery: Page = () => {
             </div>
           </Card>
           <Card style={{ padding: '24px 30px' }}>
-            <Kicker style={{ marginBottom: 12 }}>illustrative · the tree the parser keeps</Kicker>
+            <Kicker style={{ marginBottom: 12 }}>the tree the KQL parser keeps · real output, both states</Kicker>
             <TreeView nodes={nodes} shown={nodes.length} sel={null} bad={complete ? undefined : new Set([5])} />
           </Card>
         </div>
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 22 }}>
           {[
-            ['branch', 'ERROR and MISSING nodes', 'tree-sitter marks the gap and keeps the rest of the tree intact.'],
-            ['layers', 'No stack to blow', 'The tree walk is iterative: a query thousands of levels deep cannot exhaust the stack.'],
-            ['warn', 'Fuzzed, all nine inputs', 'kql, spl, esql, eql, kuery, lucene, falco, tide and the protocol. Saved crashes replay in every test run.'],
+            ['branch', 'Says what it expected', 'Each failure names what would fit. Kibana KQL a:1) now reads: near “)”; expected “or”, “and”, or end of input.'],
+            ['layers', 'Depth with a contract', 'At least as deep as before, up to 1,000 levels; past that, one TooDeep diagnostic. An or-chain stays one flat node.'],
+            ['check', 'Switched only on zero diffs', 'Old engine against new over every corpus file, its prefixes and mutations: no difference on valid input.'],
           ].map(([ic, h, b], i) => (
             <div key={h} style={{ display: 'flex', gap: 20, padding: '22px 0', borderTop: i ? `1px solid ${C.line}` : 'none' }}>
               <Icon name={ic as IconName} size={34} color={BLUE} />
@@ -2009,7 +2010,7 @@ const Analyzers: Page = () => {
   const X0 = 470;
   const X1 = 640;
   return (
-    <Frame chapter={['03', 'analyzers']} source="crates/opentide-core/src/lib.rs (codes::ALL, 132 codes) · crates/opentide-kql/src/{schema,perf}.rs">
+    <Frame chapter={['03', 'analyzers']} source="crates/opentide-core/src/lib.rs (codes::ALL, 303 codes) · crates/opentide-kql/src/{schema,perf}.rs">
       <H>One tree, many questions.</H>
       <Lead>Each analyzer asks the same tree one question. Every answer is a named code. Hover one.</Lead>
       <div style={{ position: 'relative', marginTop: 40, height: ANALYZERS.length * ROW }}>
@@ -2116,7 +2117,7 @@ const Catalog: Page = () => {
   const exact = scored.find((s) => s.c === typo);
   const near = scored.filter((s) => s.d <= 2 && s.d * 2 < typo.length).sort((a, b) => a.d - b.d)[0];
   return (
-    <Frame chapter={['03', 'analyzers']} source="catalogs/kql/defender/{tables,columns}.toml · crates/opentide-kql/src/schema.rs · CHANGELOG (943 Azure Monitor tables)">
+    <Frame chapter={['03', 'analyzers']} source="data/catalogs/kql/defender/{tables,columns}.toml · crates/opentide-kql/src/schema.rs · CHANGELOG (943 Azure Monitor tables)">
       <H>Checked against what the platform really has.</H>
       <Lead>Table and column catalogs are compiled into the engine. Sentinel alone knows 943 Azure Monitor tables. Pick a typo and see the column check work.</Lead>
       <div style={{ display: 'flex', gap: 48, marginTop: 40 }}>
@@ -2202,7 +2203,7 @@ const Injection: Page = () => {
   const yamlLine = 6;
   const yamlCol = 6 + (at - QUERY.indexOf('\n') - 1) + 1;
   return (
-    <Frame chapter={['03', 'analyzers']} source="docs/ARCHITECTURE.md (injection table) · crates/opentide-tide/src/injection.rs">
+    <Frame chapter={['03', 'analyzers']} source="docs/engine/ARCHITECTURE.md (injection table) · crates/opentide-tide/src/injection.rs">
       <H>Queries live inside YAML. So does the engine.</H>
       <Lead>A rule’s query is a block of text in a YAML file. The engine lifts it out, strips the indent, analyses it, and maps every byte back, so the red line lands on the right character.</Lead>
       <div style={{ position: 'relative', marginTop: 44, height: 520 }}>
@@ -2254,21 +2255,26 @@ const Injection: Page = () => {
 // RUST · SPEED
 // ─────────────────────────────────────────────────────────────────────────────
 const SPEED: { what: string; before: number; after: number; label: [string, string]; x: string }[] = [
-  { what: 'Hover, 1,000-object workspace (median)', before: 73, after: 1, label: ['73 ms', '< 1 ms'], x: '> 70×' },
-  { what: 'SPL analysis per query', before: 9.6, after: 0.14, label: ['9.6 ms', '0.14 ms'], x: '68×' },
-  { what: 'KQL analysis per query', before: 16, after: 4, label: ['16 ms', '4 ms'], x: '4×' },
+  { what: 'Parse, median of 301 valid queries', before: 1.5, after: 0.77, label: ['1.50 µs', '0.77 µs'], x: '1.9×' },
+  { what: 'Analyze, median of 301 valid queries', before: 10.8, after: 6.2, label: ['10.8 µs', '6.2 µs'], x: '1.7×' },
+  { what: 'Analyze a 2,000-term OR chain', before: 10.9, after: 2.0, label: ['10.9 ms', '2.0 ms'], x: '5.4×' },
 ];
-const RELEASE = `[profile.release]
-lto = true           # optimise across every crate
-codegen-units = 1    # one unit: best machine code
-strip = "symbols"    # smaller binary`;
+const CHAIN = `/// \`operand (op operand)*\` as one node of \`kind\`
+fn chain(p: &mut Parser<'_>, op: K, kind: K,
+         operand: fn(&mut Parser<'_>)) {
+    let m = p.start();
+    operand(p);
+    if !at(p, op) { m.abandon(p); return; }
+    while at(p, op) { p.bump(); operand(p); }
+    m.complete(p, kind.raw());
+}`;
 
 const Speed: Page = () => {
   const t = useClock(3600);
   return (
-    <Frame chapter={['··', 'under the hood']} source="opentidehq/language-server CHANGELOG 0.10.0 (#181) · Cargo.toml [profile.release] · README hard rules">
-      <H>Rust, and measured.</H>
-      <Lead>Compiled to native code, no garbage collector, no runtime to start. Where it was slow, the team measured and fixed it.</Lead>
+    <Frame chapter={['··', 'under the hood']} source="ADR 0012 §3 · epic #1219 · kuery pilot c691c409 · crates/opentide-kuery/src/parser.rs">
+      <H>Pure Rust, and measured.</H>
+      <Lead>Every parser moves from a generated tree-sitter grammar to plain Rust. The Kibana KQL (kuery) pilot, tree-sitter against pure Rust:</Lead>
       <div style={{ display: 'flex', gap: 64, marginTop: 50 }}>
         <div style={{ width: 900, flex: '0 0 auto', display: 'flex', flexDirection: 'column', gap: 40 }}>
           {SPEED.map((s, i) => {
@@ -2294,15 +2300,14 @@ const Speed: Page = () => {
             );
           })}
           <div style={{ fontSize: 21, color: C.muted, lineHeight: 1.5 }}>
-            How: highlight queries compiled once per process, not on every analysis; the workspace read and indexed once, re-read only when a file changes.
+            Grey: tree-sitter. Blue: pure Rust. Differential over 12,475 inputs: zero differences on the 5,884 valid ones, identical verdicts on the broken ones.
           </div>
         </div>
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 22 }}>
-          <Code code={RELEASE} lang="yaml" title="Cargo.toml" size={20} />
+          <Code code={CHAIN} lang="text" title="crates/opentide-kuery/src/parser.rs" tag="abridged" size={16} />
           {[
-            ['lock', 'I/O-free engine', 'Engine crates never touch the disk. The host hands them text, so the same code runs in a terminal or a browser.'],
-            ['package', 'Everything compiled in', 'Grammars (vendored parser.c) and catalogs (include_str!) ship inside the binary. No downloads at run time.'],
-            ['editor', 'Only the change', 'The editor sends each edit, not the whole file.'],
+            ['package', 'One toolkit, no generated C', 'logos lexers, rowan lossless trees, hand-written recursive descent and Pratt parsers on opentide-parse.'],
+            ['layers', 'Typed trees from ungrammar', 'A .ungram file per language describes its tree; cargo xtask codegen writes the typed Rust accessors.'],
           ].map(([ic, h, b]) => (
             <div key={h} style={{ display: 'flex', gap: 18 }}>
               <Icon name={ic as IconName} size={30} color={BLUE} />
@@ -2318,6 +2323,50 @@ const Speed: Page = () => {
   );
 };
 
+// Where the switch stands, language by language (2026-11-16).
+const StatusRow = ({ langs, what, state, tone }: { langs: string; what: string; state: string; tone: ChipTone }) => (
+  <div style={{ display: 'flex', alignItems: 'center', gap: 24, height: 76, borderTop: `1px solid ${C.line}` }}>
+    <span style={{ width: 330, fontSize: 27, fontWeight: 680, letterSpacing: '-0.02em' }}>{langs}</span>
+    <span style={{ flex: 1, fontSize: 23, color: C.muted }}>{what}</span>
+    <Chip tone={tone} size={18}>{state}</Chip>
+  </div>
+);
+
+const Gone = ({ children }: { children: ReactNode }) => (
+  <div style={{ display: 'flex', gap: 14, alignItems: 'baseline', fontSize: 23, lineHeight: 1.4, marginTop: 16 }}>
+    <span style={{ fontFamily: MONO, color: C.dim }}>−</span>
+    <span>{children}</span>
+  </div>
+);
+
+const Status: Page = () => (
+  <Frame chapter={['··', 'under the hood']} source="ADR 0012 · epic #1219 · #1231 · crates/*/Cargo.toml on integration/unified-core, 2026-11-16">
+    <H>Where the switch stands.</H>
+    <Lead>Merged on the integration/unified-core branch, not in a release yet. tree-sitter is deleted in one final stage.</Lead>
+    <div style={{ display: 'flex', gap: 56, marginTop: 44 }}>
+      <div style={{ width: 1040, flex: '0 0 auto' }}>
+        <StatusRow langs="Kibana KQL · Lucene" what="parsers merged" state="analysis runs on them" tone="solid" />
+        <StatusRow langs="KQL · ES|QL · YARA-L" what="parsers merged, typed ASTs" state="switch in review" tone="accent" />
+        <StatusRow langs="CQL" what="parser merged" state="switch in review" tone="accent" />
+        <StatusRow langs="EQL" what="lexer merged" state="switch in review" tone="accent" />
+        <StatusRow langs="Falco" what="rowan tree merged" state="switch in review" tone="accent" />
+        <StatusRow langs="YARA" what="YARA-X's own parser and CST" state="switch in review" tone="accent" />
+        <StatusRow langs="SPL · Exabeam" what="on tree-sitter today" state="not switched yet" tone="plain" />
+      </div>
+      <Card style={{ flex: 1, padding: '28px 32px', alignSelf: 'flex-start' }}>
+        <Kicker>deleted in the final stage · #1231</Kicker>
+        <Gone>6.14 MB of generated <M>parser.c</M> and <M>grammars/</M></Gone>
+        <Gone>the C toolchain for parsing, Node and <M>tree-sitter-cli</M></Gone>
+        <Gone>wasi-libc and 7 syscall shims in the browser build</Gone>
+        <Gone>the <M>unsafe</M> FFI of <M>opentide-syntax</M></Gone>
+        <p style={{ margin: '24px 0 0', paddingTop: 18, borderTop: `1px solid ${C.line}`, fontSize: 20, lineHeight: 1.45, color: C.muted }}>
+          Native builds still compile C through <M>ring</M> (TLS, crypto). That is a separate decision.
+        </p>
+      </Card>
+    </div>
+  </Frame>
+);
+
 // One engine, every host.
 const HOSTS: { icon: IconName; name: string; how: string; x: number; y: number }[] = [
   { icon: 'terminal', name: 'opentide CLI', how: 'pip install opentide → opentide lsp start (PyO3, abi3 wheel)', x: 0, y: 0 },
@@ -2325,7 +2374,7 @@ const HOSTS: { icon: IconName; name: string; how: string; x: number; y: number }
   { icon: 'globe', name: 'Browser', how: 'opentide-wasm in a Web Worker, no server at all', x: 0, y: 1 },
   { icon: 'flow', name: 'CI and agents', how: 'opentide-lsp analyze <file> → plain JSON diagnostics', x: 1, y: 1 },
 ];
-const CRATES = ['core', 'syntax', 'highlight', 'kql', 'spl', 'esql', 'eql', 'kuery', 'lucene', 'falco', 'ecs', 'tide', 'analysis', 'lsp', 'wasm'];
+const CRATES = ['core', 'parse', 'syntax', 'highlight', 'kql', 'spl', 'esql', 'eql', 'kuery', 'lucene', 'falco', 'cql', 'exabeam', 'yara', 'yaral', 'ecs', 'tide', 'workspace', 'analysis'];
 
 const Hosts: Page = () => {
   const t = useClock(4000);
@@ -2334,9 +2383,9 @@ const Hosts: Page = () => {
   const CY = 330;
   const pos = (h: (typeof HOSTS)[number]) => ({ x: h.x ? 1680 - 520 : 0, y: h.y ? 470 : 40 });
   return (
-    <Frame chapter={['··', 'under the hood']} source="opentidehq/language-server README (crates, hosts) · opentidehq/opentide analysis/Cargo.toml">
+    <Frame chapter={['··', 'under the hood']} source="opentidehq/opentide · crates/AGENTS.md (crates and layers) · ADR 0004 (language-server merged)">
       <H>One engine, everywhere you write detections.</H>
-      <Lead>Fifteen crates, one entry point. The same compiled engine answers in the terminal, the editor, the browser and CI.</Lead>
+      <Lead>One Cargo workspace in the opentide repository, one entry point. The same compiled engine answers in the terminal, the editor, the browser and CI.</Lead>
       <div style={{ position: 'relative', height: 640, marginTop: 20 }}>
         <svg width="1680" height="640" style={{ position: 'absolute', inset: 0, overflow: 'visible' }} aria-hidden>
           {HOSTS.map((h, i) => {
@@ -2424,7 +2473,7 @@ const Close: Page = () => (
       </p>
       <div style={{ display: 'flex', alignItems: 'center', gap: 40, marginTop: 30, fontFamily: MONO, fontSize: 23, color: INK }}>
         <CloseLink icon="globe">opentide.org</CloseLink>
-        <CloseLink icon="branch">github.com/opentidehq/language-server</CloseLink>
+        <CloseLink icon="branch">github.com/opentidehq/opentide</CloseLink>
         <CloseLink icon="terminal">opentide lsp start</CloseLink>
       </div>
     </div>
@@ -2456,31 +2505,35 @@ Three ideas: tokens, a tree, analyzers. Then why it is fast.`,
   `Watch the editor. I type a filter and make a typo: FileNam instead of FileName.
 Before I even finish, the line is underlined. Hover it: kql_unknown_column, and the engine offers FileName as the fix.
 Nothing was sent to Defender. The engine knows the table's columns itself.
-It does this for eight languages with one engine.`,
+It does this for eleven query languages, plus the Tide YAML around them, with one engine.`,
   // Pipeline
   `This is the whole story on one slide. Text comes in from the editor. It is cut into tokens. Tokens are grouped into a tree. Analyzers ask questions of that tree. Answers go back to the editor as red lines and hovers.
 Hover each step if you want to dwell on it. The next three chapters zoom into steps two, three and four.`,
   // DividerTokens
   `Chapter one: tokens. Think of it as finding the words in a sentence before you try to understand it.`,
   // Lexer
-  `The lexer reads the query once, left to right. Each piece gets a kind: identifier, the keyword where, a string, a pipe.
+  `The lexer reads the query once, left to right. It is plain Rust, built on the logos crate. Each piece gets a kind: IDENT, the keyword WHERE_KW, a STRING, a PIPE.
+Spaces and line breaks are tokens too: the tree keeps every byte, which is what lets us map positions back into YAML later.
 And each piece keeps its exact position in bytes. DeviceProcessEvents is bytes 0 to 19. That position is what lets a red line land on the right characters later.
 The colours you see in your editor come straight from these kinds. Hover any token to show its kind, its position and its colour.`,
   // DividerTree
   `Chapter two: the tree. Words alone do not tell you what the query means. Grouping them does.`,
   // TreeBuild
-  `The parser follows the KQL grammar. The table goes under tabular_primary. The filter goes under where_operator, and inside it a comparison: FileName, equals ignoring case, lsass.exe.
+  `The parser follows the KQL grammar. The table goes under TABLE_REF. The filter is a WHERE_OPERATOR, and inside it a comparison: FileName, equals ignoring case, lsass.exe.
 Hover a node: the characters it covers light up on the left. That is how the engine knows FileName is read by the filter, not kept by project.
-The parser is tree-sitter, generated from a grammar the team maintains for each language and compiled to C inside the Rust binary.`,
+This tree is real output of the new KQL parser: hand-written recursive descent in Rust, on a shared toolkit called opentide-parse, building a lossless rowan tree, the same tree library rust-analyzer uses. A .ungram file per language describes the tree's shape, and codegen writes typed accessors from it.
+It replaces the tree-sitter grammars and their generated C. That work is merged on the integration branch; more on its status at the end.`,
   // Recovery
-  `In real life you are always mid-sentence. Here the value is missing. The parser does not give up: it marks a MISSING node and keeps the rest.
-So the table check and the column check still run while you type.
-It is also hardened. The tree walk is iterative, so a pathological query cannot blow the stack, and every language is fuzzed, with saved crashes replayed in the test suite.`,
+  `In real life you are always mid-sentence. Here the value is missing. The parser does not give up: it reports "expected an expression" at that spot and keeps the rest of the tree.
+So the table check and the column check still run while you type. Both states on screen are real parser output.
+Errors now say what was expected. In Kibana KQL, a:1 followed by a stray parenthesis used to say only "near )"; now it says expected or, and, or end of input.
+Depth has a contract: every language nests at least as deep as its old engine did, up to 1,000 levels, then one TooDeep diagnostic instead of a stack overflow. Long and/or chains are one flat node.
+And no language switches until a differential test, old engine against new, over every corpus file, its prefixes and mutations, shows zero differences on valid input.`,
   // DividerAnalyzers
   `Chapter three: analyzers. Now that the structure is known, we can ask it questions.`,
   // Analyzers
   `One tree, many questions. Is it well formed? Does the table exist on this platform, and do we actually collect it? Is every column real at this point of the pipeline? Does the query filter early, which is a Microsoft best practice? Is it something a detection may contain at all? And for the YAML around it: does the rule point at a real objective?
-Every answer is a named code. 132 of them across all languages. Same codes the opentide CLI reports, with exact ranges.`,
+Every answer is a named code. 303 of them across all languages. Same codes the opentide CLI reports, with exact ranges.`,
   // Catalog
   `The catalogs are compiled into the engine. Sentinel knows 943 Azure Monitor tables. Your workspace's visibility.toml says which ones you really collect, so a rule on a table you do not ingest is caught before it ships.
 On the right, the column check. Pick a typo. The engine measures how far it is from each documented column. Within two edits, it reports the error and offers the closest column as the fix. Too far, and it does not guess.`,
@@ -2489,11 +2542,18 @@ On the right, the column check. Pick a typo. The engine measures how far it is f
 FileName is at bytes 28 to 36 in the query, which is line 6 in the file. That is why the red line is in the right place in the YAML.
 Same for SPL, ES|QL, EQL and Falco blocks.`,
   // Speed
-  `Why Rust: native code, no garbage collector, nothing to warm up. The release build optimises across all crates, in a single unit.
-But the bigger wins came from measuring. In 0.10.0 the team stopped recompiling highlight queries on every analysis: SPL went from 9.6 to 0.14 milliseconds per query, KQL from 16 to 4. And the workspace is now indexed once: hover on a thousand objects went from 73 milliseconds to under one.
-The engine never touches the disk itself, and grammars and catalogs are built in.`,
+  `The parsers move from generated tree-sitter grammars to plain Rust. The pilot was Kibana KQL, and it was measured.
+Parsing the median query: 1.50 microseconds down to 0.77. Analysing it: 10.8 down to 6.2. A 2,000-term OR chain: 10.9 milliseconds down to 2.0, because the chain is now one flat node.
+Speed is a bonus, not the reason. The reasons are no generated C, error messages that say what was expected, and one parser pattern for every language.
+The gate was a differential over 12,475 inputs: zero differences on the 5,884 valid ones, identical verdicts on the broken ones.
+On the right, real pilot code, abridged: one function turns "a or b or c" into a single node. Every parser is built from small functions like this on the shared opentide-parse toolkit; ungrammar files describe the trees and cargo xtask codegen writes their typed accessors.`,
+  // Status
+  `Where it stands today, the 16th of November. Everything here is merged on the integration/unified-core branch, not released yet.
+Kibana KQL and Lucene: the analysis already runs on the new parsers. KQL, ES|QL, YARA-L and CQL have their parsers merged, EQL its lexer, Falco its tree, YARA moves onto YARA-X's own parser; those switches are in review. SPL and Exabeam are still on tree-sitter.
+When every language has switched, one final stage deletes tree-sitter: the generated C, the C toolchain for parsing, the browser build's libc shims and the unsafe FFI. Native builds still compile some C for TLS and crypto; that is a separate decision.`,
   // Hosts
-  `Fifteen crates, one entry point, opentide-analysis. The same compiled engine runs inside the opentide Python package as opentide lsp start, as a standalone binary for VS Code, Neovim, Helix and Zed, as WebAssembly in a browser tab, and as a plain JSON command for CI and coding agents.
+  `The language server is no longer a separate repository. It merged into opentide with its history: one Cargo workspace, so there is no engine version to pin and keep in step.
+One entry point, opentide-analysis. The same compiled engine runs inside the opentide Python package as opentide lsp start, as a standalone binary for VS Code, Neovim, Helix and Zed, as WebAssembly in a browser tab, and as a plain JSON command for CI and coding agents.
 Hover each host if there is a question about one.`,
   // Close
   `That is the language server: tokens, a tree, analyzers, in Rust, everywhere.
@@ -2515,6 +2575,7 @@ export default [
   Catalog,
   Injection,
   Speed,
+  Status,
   Hosts,
   Close,
 ] satisfies Page[];
